@@ -1,3 +1,273 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+@layer theme {
+    :root {
+        /* Light mode defaults */
+        --color-page-bg: rgb(255 255 255); /* white */
+        --color-page-text: rgb(17 24 39); /* gray-900 */
+
+        --color-bg: rgb(255 255 255); /* white */
+        --color-surface: rgb(249 250 251); /* gray-50 or similar */
+        --color-text: rgb(31 41 55); /* gray-800 */
+        --color-text-muted: rgb(107 114 128); /* gray-500 */
+        --color-border: rgb(229 231 235); /* gray-200 */
+        --color-brand: rgb(37 99 235); /* blue-600 */
+
+        --color-header-from: rgb(37 99 235); /* blue-600 */
+        --color-header-to: rgb(29 78 216); /* blue-700 */
+        --color-header-border: rgb(190 227 248); /* blue-200 */
+        --color-header-text: rgb(255 255 255); /* white */
+        --color-subtitle: rgb(219 234 254); /* blue-100 */
+
+        --color-footer-bg: rgb(243 244 246); /* gray-100 */
+        --color-footer-text: rgb(55 65 81); /* gray-700 */
+        --color-footer-border: rgb(229 231 235); /* gray-200 */
+
+        --color-btn-bg: rgb(255 255 255);
+        --color-btn-text: rgb(29 78 216); /* blue-700 */
+        --color-btn-hover: rgb(239 246 255); /* blue-50 */
+        --color-btn-border: rgb(190 227 248); /* blue-200 */
+
+        --color-heading: rgb(17 24 39); /* gray-900 */
+        --color-input-bg: rgb(255 255 255); /* white */
+        --color-input-text: rgb(17 24 39); /* gray-900 */
+        --color-input-border: rgb(209 213 219); /* gray-300 */
+        --color-placeholder: rgb(107 114 128); /* gray-500 */
+        --color-ring-light: rgb(37 99 235); /* blue-500 */
+
+        --color-link: rgb(37 99 235); /* blue-600 */
+        --color-link-hover: rgb(29 78 216); /* blue-700 */
+        --color-tool-heading: rgb(17 24 39); /* gray-900 */
+
+        --color-card-bg: rgb(255 255 255); /* white */
+        --color-card-border: rgb(229 231 235); /* gray-200 */
+        --color-btn-primary: rgb(59 130 246); /* blue-500 */
+        --color-btn-primary-hover: rgb(37 99 235); /* blue-600 */
+    }
+
+    .dark {
+        /* Dark mode overrides */
+        --color-page-bg: rgb(15 23 42); /* slate-950 */
+        --color-page-text: rgb(226 232 240); /* gray-100 → slightly warmer than pure white */
+
+        --color-bg: rgb(15 15 15);
+        --color-surface: rgb(23 23 23);
+        --color-text: rgb(229 234 242); /* slate-100 */
+        --color-text-muted: rgb(148 163 184); /* slate-400 */
+        --color-border: rgb(51 65 85); /* slate-700 */
+        --color-brand: rgb(147 197 253); /* blue-400 */
+
+        --color-header-from: rgb(15 23 42); /* slate-900 */
+        --color-header-to: rgb(15 23 42); /* slate-800 → same for flat look, or use slate-800 if you want subtle */
+        --color-header-border: rgb(51 65 85); /* slate-700 */
+        --color-header-text: rgb(241 245 252); /* slate-100 */
+        --color-subtitle: rgb(148 163 184); /* slate-400 */
+
+        --color-footer-bg: rgb(15 23 42); /* slate-900 */
+        --color-footer-text: rgb(203 213 225); /* slate-300 */
+        --color-footer-border: rgb(51 65 85); /* slate-700 */
+
+        --color-btn-bg: rgb(51 65 85); /* slate-700 */
+        --color-btn-text: rgb(255 255 255);
+        --color-btn-hover: rgb(71 85 105); /* slate-600 */
+        --color-btn-border: rgb(71 85 105); /* slate-600 */
+
+        --color-heading: rgb(255 255 255); /* white */
+        --color-input-bg: rgb(15 23 42); /* slate-800 */
+        --color-input-text: rgb(248 250 252); /* slate-100 */
+        --color-input-border: rgb(51 65 85); /* slate-600 */
+        --color-placeholder: rgb(148 163 184); /* slate-400 */
+        --color-ring-light: rgb(147 197 253); /* blue-400 */
+
+        --color-link: rgb(147 197 253); /* blue-400 */
+        --color-link-hover: rgb(147 197 253); /* blue-300 → or keep same for subtle hover */
+        --color-tool-heading: rgb(255 255 255); /* white */
+
+        --color-card-bg: rgb(15 23 42); /* slate-800 */
+        --color-card-border: rgb(51 65 85); /* slate-700 */
+        --color-btn-primary: rgb(37 99 235); /* blue-600 → darker for contrast */
+        --color-btn-primary-hover: rgb(29 78 216); /* blue-700 */
+
+        .border-l-primary {
+            border-left-color: rgb(147 197 253);
+        }
+
+        .border-l-draft {
+            border-left-color: rgb(250 204 21);
+        }
+
+        .bg-draft {
+            background-color: rgb(63 63 20);
+        }
+
+        .text-draft {
+            color: rgb(253 224 71);
+        }
+    }
+}
+
+@layer utilities {
+    .bg-page {
+        background-color: var(--color-page-bg);
+    }
+
+    .text-page {
+        color: var(--color-page-text);
+    }
+
+    .bg-bg {
+        background-color: var(--color-bg);
+    }
+
+    .bg-surface {
+        background-color: var(--color-surface);
+    }
+
+    .bg-footer {
+        background-color: var(--color-footer-bg);
+    }
+
+    .text-primary {
+        color: var(--color-text);
+    }
+
+    .text-muted {
+        color: var(--color-text-muted);
+    }
+
+    .border-general {
+        border-color: var(--color-border);
+    }
+
+    .border-footer {
+        border-color: var(--color-footer-border);
+    }
+
+    .text-brand {
+        color: var(--color-brand);
+    }
+
+    .bg-header {
+        background-image: linear-gradient(to right, var(--color-header-from), var(--color-header-to));
+    }
+
+    .text-header {
+        color: var(--color-header-text);
+    }
+
+    .text-subtitle {
+        color: var(--color-subtitle);
+    }
+
+    .border-header {
+        border-color: var(--color-header-border);
+    }
+
+    .bg-btn {
+        background-color: var(--color-btn-bg);
+    }
+
+    .text-btn {
+        color: var(--color-btn-text);
+    }
+
+    .hover\:bg-btn:hover {
+        background-color: var(--color-btn-hover);
+    }
+
+    .border-btn {
+        border-color: var(--color-btn-border);
+    }
+
+    .text-heading {
+        color: var(--color-heading);
+    }
+
+    .bg-input {
+        background-color: var(--color-input-bg);
+    }
+
+    .text-input {
+        color: var(--color-input-text);
+    }
+
+    .border-input {
+        border-color: var(--color-input-border);
+    }
+
+    .placeholder-input::placeholder {
+        color: var(--color-placeholder);
+    }
+
+    .ring-focus {
+        --tw-ring-color: var(--color-ring-light);
+    }
+
+    .text-link {
+        color: var(--color-link);
+    }
+
+    .hover\:text-link:hover {
+        color: var(--color-link-hover);
+    }
+
+    .prose-headings {
+        & h1, & h2, & h3, & h4, & h5, & h6 {
+            color: var(--color-tool-heading);
+        }
+    }
+
+    .prose-a {
+        & a {
+            color: var(--color-link);
+        }
+
+        & a:hover {
+            color: var(--color-link-hover);
+        }
+    }
+
+    .bg-card {
+        background-color: var(--color-card-bg);
+    }
+
+    .border-card {
+        border-color: var(--color-card-border);
+    }
+
+    .bg-btn-primary {
+        background-color: var(--color-btn-primary);
+    }
+
+    .hover\:bg-btn-primary:hover {
+        background-color: var(--color-btn-primary-hover);
+    }
+
+    .border-l-primary {
+        border-left-color: rgb(59 130 246);
+    }
+
+    .border-l-draft {
+        border-left-color: rgb(251 191 36);
+    }
+
+    .text-card-title {
+        color: var(--color-heading);
+    }
+
+    .text-card-desc {
+        color: var(--color-text-muted);
+    }
+
+    .bg-draft {
+        background-color: rgb(254 252 232);
+    }
+
+    .text-draft {
+        color: rgb(133 77 14);
+    }
+
+
+}

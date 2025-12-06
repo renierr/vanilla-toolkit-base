@@ -67,20 +67,22 @@ function renderOverview() {
     grid.innerHTML = filtered
       .map(
         (tool) => `
-  <a href="#${tool.path}" class="block p-6 bg-white dark:bg-slate-800 rounded-xl shadow hover:shadow-xl transition-all border-l-4 ${
-    tool.draft
-      ? 'border-l-yellow-400 dark:border-l-yellow-500'
-      : 'border-l-blue-500 dark:border-l-blue-400'
-  } border-t border-r border-b border-gray-100 dark:border-slate-700">
-    <div class="flex justify-between items-start gap-4">
-      <div class="flex-1">
-        <h3 class="text-xl font-bold text-gray-900 dark:text-white">${tool.name}</h3>
-        <p class="text-gray-600 dark:text-slate-300 mt-2 text-sm">${tool.description}</p>
+    <a href="#${tool.path}" class="block p-6 bg-card rounded-xl shadow hover:shadow-xl transition-all border-l-4 ${
+      tool.draft ? 'border-l-draft' : 'border-l-primary'
+    } border-t border-r border-b border-card">
+      <div class="flex justify-between items-start gap-4">
+        <div class="flex-1">
+          <h3 class="text-xl font-bold text-card-title">${tool.name}</h3>
+          <p class="text-card-desc mt-2 text-sm">${tool.description}</p>
+        </div>
+        ${
+          tool.draft
+            ? '<span class="text-xs bg-draft text-draft px-3 py-1 rounded-full font-medium whitespace-nowrap">DRAFT</span>'
+            : ''
+        }
       </div>
-      ${tool.draft ? '<span class="text-xs bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-3 py-1 rounded-full font-medium whitespace-nowrap">DRAFT</span>' : ''}
-    </div>
-  </a>
-`
+    </a>
+  `
       )
       .join('');
   }
@@ -94,7 +96,9 @@ function renderTool(toolPath: string) {
 
   if (!tool) {
     renderLayout(
-      '<div class="container mx-auto px-4 py-16 text-center"><h2 class="text-2xl text-gray-900 dark:text-white">Tool not found</h2></div>'
+      '<div class="container mx-auto px-4 py-16 text-center">' +
+        '<h2 class="text-2xl text-heading">Tool not found</h2>' +
+        '</div>'
     );
     return;
   }
