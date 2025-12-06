@@ -135,10 +135,14 @@ function router() {
 
 // === Theme Switch ===
 function setTheme(mode: 'dark' | 'light') {
-    document.documentElement.classList.toggle('dark', mode === 'dark')
+    if (mode === 'dark') {
+        document.documentElement.classList.add('dark')
+    } else {
+        document.documentElement.classList.remove('dark')
+    }
     localStorage.setItem('theme', mode)
     const icon = document.getElementById('theme-toggle-icon')
-    if (icon) icon.textContent = mode === 'dark' ? '🌙' : '☀️'
+    if (icon) icon.textContent = mode === 'dark' ? '☀️' : '🌙'
 }
 
 function getSystemTheme(): 'dark' | 'light' {
