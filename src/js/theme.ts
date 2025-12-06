@@ -33,5 +33,8 @@ export function setupThemeToggle() {
   };
 
   newBtn.addEventListener('click', themeToggleFunc);
-  themeToggleFunc();
+  const icon = document.getElementById('theme-toggle-icon');
+  if (icon) {
+    icon.textContent = document.documentElement.classList.contains('dark') ? '☀️' : '🌙';
+  }
 }
