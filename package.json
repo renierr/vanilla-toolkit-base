@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
-    "preview": "vite preview",
+    "preview": "vite preview --port 5000",
     "format": "prettier --write \"src/**/*.{js,ts,html,css,json,md}\"",
     "format:check": "prettier --check \"src/**/*.{js,ts,html,css,json,md}\""
   },

@@ -2,28 +2,11 @@ import headerHtml from './components/header.html?raw';
 import footerHtml from './components/footer.html?raw';
 import overviewHtml from './pages/overview.html?raw';
 import toolPageHtml from './pages/tool.html?raw';
-import { getSystemTheme, isDev } from './js/utils.ts';
+import { isDev } from './js/utils.ts';
 import type { Tool } from './js/types';
+import { initThemeOnLoad, setupThemeToggle } from './js/theme.ts';
 
 const app = document.getElementById('app')!;
-
-function setTheme(mode: 'dark' | 'light') {
-  // Set HTML class for Tailwind dark mode
-  if (mode === 'dark') {
-    document.documentElement.classList.add('dark');
-  } else {
-    document.documentElement.classList.remove('dark');
-  }
-
-  // Save to localStorage
-  localStorage.setItem('theme', mode);
-
-  // Update icon
-  const icon = document.getElementById('theme-toggle-icon');
-  if (icon) {
-    icon.textContent = mode === 'dark' ? '☀️' : '🌙';
-  }
-}
 
 // Load all tools dynamically
 const descModules = import.meta.glob('./tools/*/description.json', { eager: true });
@@ -35,13 +18,6 @@ const htmlModules = import.meta.glob('./tools/*/template.html', {
 const scriptModules = import.meta.glob('./tools/*/index.ts', { eager: true });
 
 const tools: Tool[] = [];
-
-// === Initialize theme immediately ===
-function initThemeOnLoad() {
-  const saved = localStorage.getItem('theme') as 'dark' | 'light' | null;
-  const mode = saved || getSystemTheme();
-  setTheme(mode);
-}
 
 for (const path in descModules) {
   const desc = (descModules[path] as any).default as {
@@ -73,25 +49,7 @@ for (const path in descModules) {
 // === Rendering functions ===
 function renderLayout(content: string) {
   app.innerHTML = headerHtml + content + footerHtml;
-
-  const saved = localStorage.getItem('theme') as 'dark' | 'light' | null;
-  const mode = saved || getSystemTheme();
-  setTheme(mode);
   setupThemeToggle();
-}
-
-function setupThemeToggle() {
-  const btn = document.getElementById('theme-toggle');
-  if (!btn) return;
-
-  // Remove old listeners by cloning
-  const newBtn = btn.cloneNode(true) as HTMLElement;
-  btn.parentNode?.replaceChild(newBtn, btn);
-
-  newBtn.addEventListener('click', () => {
-    const current = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
-    setTheme(current === 'dark' ? 'light' : 'dark');
-  });
 }
 
 function renderOverview() {
