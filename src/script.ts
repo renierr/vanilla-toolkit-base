@@ -57,10 +57,10 @@ function renderLayout(content: string) {
 
     const btn = document.getElementById('theme-toggle')
     if (btn) {
-        btn.onclick = () => {
+        btn.addEventListener('click', () => {
             const current = document.documentElement.classList.contains('dark') ? 'dark' : 'light'
             setTheme(current === 'dark' ? 'light' : 'dark')
-        }
+        })
     }
 }
 
@@ -80,15 +80,15 @@ function renderOverview() {
         grid.innerHTML = filtered
             .map(
                 tool => `
-  <a href="#${tool.path}" class="block p-6 bg-white dark:bg-gray-800 rounded-xl shadow hover:shadow-2xl transition-all border-2 ${
-                tool.draft ? 'border-yellow-400 dark:border-yellow-500' : 'border-gray-200 dark:border-gray-700'
-            }">
-    <div class="flex justify-between items-start">
-      <div>
-        <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100">${tool.name}</h3>
-        <p class="text-gray-600 dark:text-gray-300 mt-1">${tool.description}</p>
+  <a href="#${tool.path}" class="block p-6 bg-white dark:bg-slate-800 rounded-xl shadow hover:shadow-xl transition-all border-l-4 ${
+                tool.draft ? 'border-l-yellow-400 dark:border-l-yellow-500' : 'border-l-blue-500 dark:border-l-blue-400'
+            } border-t border-r border-b border-gray-100 dark:border-slate-700">
+    <div class="flex justify-between items-start gap-4">
+      <div class="flex-1">
+        <h3 class="text-xl font-bold text-gray-900 dark:text-white">${tool.name}</h3>
+        <p class="text-gray-600 dark:text-slate-300 mt-2 text-sm">${tool.description}</p>
       </div>
-      ${tool.draft ? '<span class="text-xs bg-yellow-400 dark:bg-yellow-600 text-black px-3 py-1 rounded-full font-medium">DRAFT</span>' : ''}
+      ${tool.draft ? '<span class="text-xs bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 px-3 py-1 rounded-full font-medium whitespace-nowrap">DRAFT</span>' : ''}
     </div>
   </a>
 `
