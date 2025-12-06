@@ -4,6 +4,7 @@ Minimalistic, lightning-fast tool collection
 Vite + TypeScript + Tailwind – **no React, no framework**
 
 ## Features
+
 - Add new tools via folder → appear automatically
 - Search function with live filter
 - Unified design with header & footer
@@ -14,6 +15,7 @@ Vite + TypeScript + Tailwind – **no React, no framework**
 All tools automatically support light and dark mode via **Tailwind CSS class strategy**.
 
 The theme is controlled by the `dark` class on `<html>`:
+
 - **Light mode**: `<html>` (no class)
 - **Dark mode**: `<html class="dark">`
 
@@ -26,8 +28,8 @@ Use Tailwind's `dark:` prefix for dark mode styles:
 ```html
 <!-- Light: white bg, Dark: slate-800 bg -->
 <div class="bg-white dark:bg-slate-800">
-  <!-- Light: gray-900 text, Dark: white text -->
-  <p class="text-gray-900 dark:text-white">Content</p>
+    <!-- Light: gray-900 text, Dark: white text -->
+    <p class="text-gray-900 dark:text-white">Content</p>
 </div>
 ```
 
@@ -42,12 +44,14 @@ Use Tailwind's `dark:` prefix for dark mode styles:
 | `bg-blue-600` | `dark:bg-blue-500` | Buttons, accents |
 
 **Focus & Hover States:**
+
 ```html
 <input class="focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400">
 <button class="hover:bg-blue-700 dark:hover:bg-blue-600">Click</button>
 ```
 
 ## Create a new tool (30 seconds)
+
 ```bash
 src/tools/my-tool/
 ├── description.json     # Name + description
