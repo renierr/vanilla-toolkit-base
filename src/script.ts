@@ -104,7 +104,7 @@ function renderTool(toolPath: string) {
     const tool = tools.find(t => t.path === toolPath)
 
     if (!tool) {
-        renderLayout('<div class="container mx-auto px-4 py-16 text-center"><h2 class="text-2xl">Tool not found</h2></div>')
+        renderLayout('<div class="container mx-auto px-4 py-16 text-center"><h2 class="text-2xl text-gray-900 dark:text-white">Tool not found</h2></div>')
         return
     }
 
@@ -112,6 +112,12 @@ function renderTool(toolPath: string) {
 
     const contentDiv = document.getElementById('tool-content')!
     contentDiv.innerHTML = tool.html
+
+    // Back button
+    const backBtn = document.getElementById('back-btn')
+    if (backBtn) {
+        backBtn.addEventListener('click', () => history.back())
+    }
 
     // call Tool-specific script (if exist)
     tool.script?.()
