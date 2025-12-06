@@ -50,6 +50,18 @@ for (const path in descModules) {
 // === Rendering functions ===
 function renderLayout(content: string) {
     app.innerHTML = headerHtml + content + footerHtml
+
+    const saved = localStorage.getItem('theme') as 'dark' | 'light' | null
+    const mode = saved || getSystemTheme()
+    setTheme(mode)
+
+    const btn = document.getElementById('theme-toggle')
+    if (btn) {
+        btn.onclick = () => {
+            const current = document.documentElement.classList.contains('dark') ? 'dark' : 'light'
+            setTheme(current === 'dark' ? 'light' : 'dark')
+        }
+    }
 }
 
 function renderOverview() {
@@ -68,18 +80,18 @@ function renderOverview() {
         grid.innerHTML = filtered
             .map(
                 tool => `
-      <a href="#${tool.path}" class="block p-6 bg-white rounded-xl shadow hover:shadow-2xl transition-all border-2 ${
-                    tool.draft ? 'border-yellow-400' : 'border-gray-200'
-                }">
-        <div class="flex justify-between items-start">
-          <div>
-            <h3 class="text-xl font-bold text-gray-800">${tool.name}</h3>
-            <p class="text-gray-600 mt-1">${tool.description}</p>
-          </div>
-          ${tool.draft ? '<span class="text-xs bg-yellow-400 text-black px-3 py-1 rounded-full font-medium">DRAFT</span>' : ''}
-        </div>
-      </a>
-    `
+  <a href="#${tool.path}" class="block p-6 bg-white dark:bg-gray-800 rounded-xl shadow hover:shadow-2xl transition-all border-2 ${
+                tool.draft ? 'border-yellow-400 dark:border-yellow-500' : 'border-gray-200 dark:border-gray-700'
+            }">
+    <div class="flex justify-between items-start">
+      <div>
+        <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100">${tool.name}</h3>
+        <p class="text-gray-600 dark:text-gray-300 mt-1">${tool.description}</p>
+      </div>
+      ${tool.draft ? '<span class="text-xs bg-yellow-400 dark:bg-yellow-600 text-black px-3 py-1 rounded-full font-medium">DRAFT</span>' : ''}
+    </div>
+  </a>
+`
             )
             .join('')
     }
@@ -113,6 +125,18 @@ function router() {
     } else {
         renderOverview()
     }
+}
+
+// === Theme Switch ===
+function setTheme(mode: 'dark' | 'light') {
+    document.documentElement.classList.toggle('dark', mode === 'dark')
+    localStorage.setItem('theme', mode)
+    const icon = document.getElementById('theme-toggle-icon')
+    if (icon) icon.textContent = mode === 'dark' ? '🌙' : '☀️'
+}
+
+function getSystemTheme(): 'dark' | 'light' {
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
 }
 
 // Start + hash changes
