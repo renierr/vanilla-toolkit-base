@@ -4,7 +4,7 @@ import overviewHtml from './pages/overview.html?raw';
 import toolPageHtml from './pages/tool.html?raw';
 import { isDev } from './js/utils.ts';
 import type { Tool } from './js/types';
-import { initThemeOnLoad, setupThemeToggle } from './js/theme.ts';
+import { setupThemeToggle } from './js/theme.ts';
 import { siteConfig } from './config';
 
 const app = document.getElementById('app')!;
@@ -140,8 +140,6 @@ function router() {
     renderOverview();
   }
 }
-
-initThemeOnLoad();
 
 // Start + hash changes
 window.addEventListener('hashchange', router);

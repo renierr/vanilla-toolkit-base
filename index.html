@@ -4,6 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vanilla Toolkit</title>
+
+    <script>
+      // avoid short flash by checking it first in HTML
+      (function () {
+        const saved = localStorage.getItem('theme'); // values: 'dark'|'light'|null
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const useDark = saved === 'dark' || (saved === null && prefersDark);
+
+        if (useDark) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script>
     <script type="module" src="./src/script.ts"></script>
     <link rel="stylesheet" href="./src/style.css" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

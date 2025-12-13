@@ -1,5 +1,3 @@
-import { getSystemTheme } from './utils.ts';
-
 export function setTheme(mode: 'dark' | 'light') {
   document.documentElement.classList.toggle('dark', mode === 'dark');
 
@@ -11,12 +9,6 @@ export function setTheme(mode: 'dark' | 'light') {
   if (icon) {
     icon.textContent = mode === 'dark' ? '☀️' : '🌙';
   }
-}
-
-export function initThemeOnLoad() {
-  const saved = localStorage.getItem('theme') as 'dark' | 'light' | null;
-  const mode = saved || getSystemTheme();
-  setTheme(mode);
 }
 
 export function setupThemeToggle() {
