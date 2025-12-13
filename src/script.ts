@@ -5,8 +5,14 @@ import toolPageHtml from './pages/tool.html?raw';
 import { isDev } from './js/utils.ts';
 import type { Tool } from './js/types';
 import { initThemeOnLoad, setupThemeToggle } from './js/theme.ts';
+import { siteConfig } from './config';
 
 const app = document.getElementById('app')!;
+
+// apply config values
+document.title = siteConfig.title;
+const metaDesc = document.querySelector('meta[name="description"]');
+if (metaDesc) metaDesc.setAttribute('content', siteConfig.description || '');
 
 // Load all tools dynamically
 const descModules = import.meta.glob('./tools/*/description.json', { eager: true });
@@ -50,6 +56,13 @@ for (const path in descModules) {
 function renderLayout(content: string) {
   app.innerHTML = headerHtml + content + footerHtml;
   setupThemeToggle();
+
+  const footerText = document.getElementById('footer-text');
+  if (footerText) footerText.innerHTML = siteConfig.footerText || '';
+  const headerTitle = document.getElementById('header-title');
+  if (headerTitle) headerTitle.innerHTML = siteConfig.title;
+  const headerDescription = document.getElementById('header-description');
+  if (headerDescription) headerDescription.innerHTML = siteConfig.description || '';
 }
 
 function renderOverview() {

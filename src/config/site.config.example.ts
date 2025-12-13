@@ -1,0 +1,8 @@
+import type { SiteConfig } from './types';
+
+/* copy to site.config.ts to customize */
+export const siteConfig = {
+  title: 'Vanilla Toolkit',
+  description: 'Collection of useful vanilla JavaScript tools – no framework, easily extendable',
+  footerText: '© 2025 <span class="font-semibold text-brand">Vanilla Toolkit</span> Made with ❤️',
+} satisfies SiteConfig;
