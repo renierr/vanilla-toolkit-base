@@ -57,3 +57,10 @@ src/tools/my-tool/
 ├── description.json     # Name + description
 ├── template.html        # Your layout
 └── index.ts             # Your logic (optional)
+```
+
+### Site configuration override
+
+The default configuration lives in `src/config/site.config.example.ts`.     
+To customize the configuration for your project, copy the file to the Name `site.config.ts` and change any configuration values.
+See types in `src/config/site.config.ts` for possible values.
