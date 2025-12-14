@@ -3,6 +3,7 @@
   "description": "Simple calculator with basic arithmetic operations",
   "draft": true,
   "example": true,
+  "icon": "calculator",
   "sectionId": "examples",
   "order": 100
 }
