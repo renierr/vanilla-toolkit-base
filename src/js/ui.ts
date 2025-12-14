@@ -1,3 +1,5 @@
+import { renderToolIconSvg } from './tool-icons.ts';
+
 export type MessageType = 'info' | 'warning' | 'alert';
 
 function classesForType(type: MessageType) {
@@ -9,6 +11,17 @@ function classesForType(type: MessageType) {
     case 'info':
     default:
       return { wrap: 'msg-wrap-info', badge: 'msg-badge-info' };
+  }
+}
+function iconIdForMessageType(type: MessageType): string {
+  switch (type) {
+    case 'alert':
+      return 'error';
+    case 'warning':
+      return 'warning';
+    case 'info':
+    default:
+      return 'info';
   }
 }
 
@@ -141,9 +154,18 @@ export function showMessage(message: string, options: MessageOptions = { type: '
 
   const badge = document.createElement('span');
   badge.className =
-    'inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold whitespace-nowrap ' +
+    'inline-flex items-center gap-1.5 rounded-full px-2 py-1 text-xs font-semibold whitespace-nowrap ' +
     c.badge;
-  badge.textContent = msgType.toUpperCase();
+
+  const badgeIcon = document.createElement('span');
+  badgeIcon.className = 'inline-flex items-center';
+  badgeIcon.innerHTML = renderToolIconSvg(iconIdForMessageType(msgType), 'w-4 h-4');
+
+  const badgeLabel = document.createElement('span');
+  badgeLabel.textContent = msgType.toUpperCase();
+
+  badge.appendChild(badgeIcon);
+  badge.appendChild(badgeLabel);
 
   const text = document.createElement('div');
   text.className = 'flex-1 text-sm leading-relaxed';
