@@ -11,7 +11,7 @@ const footerFinal = replacePlaceholders(footerHtml, siteContext);
 
 export function renderLayout(content: string) {
   const app = document.getElementById('app')!;
-  app.innerHTML = headerFinal + content + footerFinal;
+  app.innerHTML = headerFinal + replacePlaceholders(content, siteContext) + footerFinal;
   setupThemeToggle();
 }
 
@@ -22,7 +22,7 @@ export function renderTool(tool: Tool | undefined) {
     <h2 class="text-2xl text-heading">Tool not found</h2>
     `;
   const contentDiv = document.getElementById('tool-content')!;
-  contentDiv.innerHTML = tool ? tool.html : noToolHtml;
+  contentDiv.innerHTML = tool ? replacePlaceholders(tool.html, siteContext) : noToolHtml;
 
   // Back button
   const backBtn = document.getElementById('back-btn');
