@@ -184,10 +184,14 @@ function router() {
 
 // Start + hash changes
 window.addEventListener('hashchange', router);
-window.addEventListener('load', router);
-router(); // immediately on load
 
-// Init UI bits after DOM is ready (script is in <head>)
-window.addEventListener('DOMContentLoaded', () => {
+// Init UI bits + initial route after DOM is ready
+if (document.readyState === 'loading') {
+  window.addEventListener('DOMContentLoaded', () => {
+    initScrollToTop();
+    router();
+  });
+} else {
   initScrollToTop();
-});
+  router();
+}
