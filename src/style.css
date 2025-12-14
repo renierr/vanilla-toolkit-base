@@ -147,6 +147,15 @@
 }
 
 @layer utilities {
+    /* Global native form control theming */
+    :root {
+        color-scheme: light;
+    }
+    .dark {
+        color-scheme: dark;
+    }
+
+    /* specific color utilities */
     .bg-page {
         background-color: var(--color-page-bg);
     }
@@ -339,7 +348,5 @@
         background-color: var(--color-message-alert-badge-bg);
         color: var(--color-message-alert-badge-text);
     }
-
-
 
 }
