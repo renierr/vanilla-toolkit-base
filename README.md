@@ -101,6 +101,39 @@ Use one of the following (case-insensitive):
 - `error`
 - `sparkles`
 
+### Register custom icons (derived projects)
+
+This template exposes an icon registry so derived projects can add (or override) icon IDs without editing `src/js/tool-icons.ts`.
+
+1) Import `registerToolIcons` in your entry file (e.g. `src/script.ts`).
+
+2) Import any additional icons you want from `lucide`.
+
+3) Register them at once during startup.
+
+```ts
+import { registerToolIcons } from 
+        './src/js/tool-icons';
+import { ArrowLeft } from '@lucide/icons';
+    
+registerToolIcons({
+    arrowleft: ArrowLeft,
+    // add more icons here
+});
+```
+
+Now you can reference your new icon IDs from any tool `config.json`:
+
+```json
+{ "name": "My Tool", "description": "Does something useful", "icon": "brain" }
+```
+
+Notes:
+- IDs are normalized (trimmed + lowercased), so `Brain`, `brain`, and `  BRAIN  ` all match.
+- If an ID is unknown, the renderer falls back to a default icon.
+- If you register an existing ID, it will override the built-in icon for that ID.
+
+
 ### Site configuration override
 
 The default configuration lives in `src/config/site.config.template.ts`.     

@@ -1,6 +1,7 @@
 {
   "name": "Hello World",
   "description": "Minimal example tool that shows a Hello World message",
+  "icon": "sparkles",
   "draft": false,
   "example": true
 }
