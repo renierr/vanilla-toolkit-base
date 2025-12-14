@@ -1,36 +1,5 @@
 import { createElement } from 'lucide';
-import {
-  Wrench,
-  Settings,
-  SlidersHorizontal,
-  Hammer,
-  Ruler,
-  Calculator,
-  Clipboard,
-  Copy,
-  ScanText,
-  FileText,
-  FileJson,
-  FileCode2,
-  Folder,
-  Search,
-  Filter,
-  List,
-  Grid3X3,
-  Download,
-  Upload,
-  Share2,
-  Link,
-  Shield,
-  Lock,
-  KeyRound,
-  Info,
-  HelpCircle,
-  AlertTriangle,
-  CheckCircle2,
-  XCircle,
-  Sparkles,
-} from 'lucide';
+import * as Lucide from 'lucide';
 
 const DEFAULT_ICON_ID = 'wrench';
 
@@ -69,87 +38,58 @@ export function getRegisteredToolIconIds(): string[] {
   return Object.keys(ICONS).sort((a, b) => a.localeCompare(b));
 }
 
-/**
- * Optional: template-side typing for known built-in icons.
- * Derived projects can still pass any string icon ID from config.
- */
-export type ToolIconId =
-  | 'wrench'
-  | 'settings'
-  | 'sliders'
-  | 'hammer'
-  | 'ruler'
-  | 'calculator'
-  | 'clipboard'
-  | 'copy'
-  | 'scantext'
-  | 'filetext'
-  | 'filejson'
-  | 'filecode'
-  | 'folder'
-  | 'search'
-  | 'filter'
-  | 'list'
-  | 'grid'
-  | 'download'
-  | 'upload'
-  | 'share'
-  | 'link'
-  | 'shield'
-  | 'lock'
-  | 'key'
-  | 'info'
-  | 'help'
-  | 'warning'
-  | 'success'
-  | 'error'
-  | 'sparkles';
-
 // Register built-in template icons
 registerToolIcons({
   // General / tools
-  wrench: Wrench,
-  settings: Settings,
-  sliders: SlidersHorizontal,
-  hammer: Hammer,
-  ruler: Ruler,
+  wrench: Lucide.Wrench,
+  settings: Lucide.Settings,
+  sliders: Lucide.SlidersHorizontal,
+  hammer: Lucide.Hammer,
+  ruler: Lucide.Ruler,
 
   // Data / text
-  calculator: Calculator,
-  clipboard: Clipboard,
-  copy: Copy,
-  scantext: ScanText,
-  filetext: FileText,
-  filejson: FileJson,
-  filecode: FileCode2,
-  folder: Folder,
+  calculator: Lucide.Calculator,
+  clipboard: Lucide.Clipboard,
+  copy: Lucide.Copy,
+  scantext: Lucide.ScanText,
+  filetext: Lucide.FileText,
+  filejson: Lucide.FileJson,
+  filecode: Lucide.FileCode2,
+  folder: Lucide.Folder,
 
   // UI / navigation
-  search: Search,
-  filter: Filter,
-  list: List,
-  grid: Grid3X3,
+  search: Lucide.Search,
+  filter: Lucide.Filter,
+  list: Lucide.List,
+  grid: Lucide.Grid3X3,
 
   // IO / sharing
-  download: Download,
-  upload: Upload,
-  share: Share2,
-  link: Link,
+  download: Lucide.Download,
+  upload: Lucide.Upload,
+  share: Lucide.Share2,
+  link: Lucide.Link,
 
   // Security
-  shield: Shield,
-  lock: Lock,
-  key: KeyRound,
+  shield: Lucide.Shield,
+  lock: Lucide.Lock,
+  key: Lucide.KeyRound,
 
   // Status / info
-  info: Info,
-  help: HelpCircle,
-  warning: AlertTriangle,
-  success: CheckCircle2,
-  error: XCircle,
+  info: Lucide.Info,
+  help: Lucide.HelpCircle,
+  warning: Lucide.AlertTriangle,
+  success: Lucide.CheckCircle2,
+  error: Lucide.XCircle,
 
   // Fun / highlight
-  sparkles: Sparkles,
+  sparkles: Lucide.Sparkles,
+
+  // Files / images
+  image: Lucide.Image,
+  file: Lucide.File,
+  fileimage: Lucide.FileImage,
+  fileadd: Lucide.FilePlus2,
+  filedownload: Lucide.FileDown,
 });
 
 export function renderToolIconSvg(iconId?: string, className = 'w-6 h-6'): string {
