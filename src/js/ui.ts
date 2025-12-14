@@ -12,6 +12,17 @@ function classesForType(type: MessageType) {
   }
 }
 
+type MessageOptions = {
+  /**
+   * Message type (optional). Default: info
+   */
+  type?: MessageType;
+  /**
+   * Auto-close after N ms (optional). Example: 5000
+   */
+  timeoutMs?: number;
+};
+
 type ShowProgressOptions = {
   /**
    * Initial visibility (optional). Default: true
@@ -114,11 +125,11 @@ export function hideProgress() {
   showProgress('', { visible: false });
 }
 
-export function showMessage(message: string, type: MessageType) {
+export function showMessage(message: string, options: MessageOptions = { type: 'info' }) {
   const host = document.getElementById('ui-messages');
   if (!host) return;
 
-  const msgType = type || 'info';
+  const msgType = options?.type || 'info';
   const c = classesForType(msgType);
 
   const item = document.createElement('div');
@@ -145,7 +156,13 @@ export function showMessage(message: string, type: MessageType) {
   closeBtn.setAttribute('aria-label', 'Close message');
   closeBtn.innerHTML = '&#10005;';
 
+  let autoCloseTimer: number | null = null;
+
   const close = () => {
+    if (autoCloseTimer !== null) {
+      window.clearTimeout(autoCloseTimer);
+      autoCloseTimer = null;
+    }
     item.remove();
   };
   closeBtn.addEventListener('click', close);
@@ -155,6 +172,17 @@ export function showMessage(message: string, type: MessageType) {
   item.appendChild(closeBtn);
 
   host.appendChild(item);
+
+  // Auto-close after timeoutMs (optional)
+  if (
+    typeof options.timeoutMs === 'number' &&
+    Number.isFinite(options.timeoutMs) &&
+    options.timeoutMs > 0
+  ) {
+    autoCloseTimer = window.setTimeout(() => {
+      close();
+    }, options.timeoutMs);
+  }
 
   return { close };
 }

@@ -11,16 +11,16 @@ export default function init() {
     showProgress('Simulate work… please wait.', { timeoutMs: 5000, tooLongMs: 2000 });
   });
 
-  btnInfo?.addEventListener('click', () => showMessage('This is a tool Info-Message.', 'info'));
+  btnInfo?.addEventListener('click', () => showMessage('This is a tool Info-Message.'));
   btnWarning?.addEventListener('click', () =>
-    showMessage('This is a warning – please check.', 'warning')
+    showMessage('This is a warning – please check.', { type: 'warning' })
   );
   btnAlert?.addEventListener('click', () =>
-    showMessage('This is an alert – something went wrong.', 'alert')
+    showMessage('This is an alert – something went wrong.', { type: 'alert' })
   );
-
   btnInfoClose?.addEventListener('click', () => {
-    const item = showMessage('This is a tool Info-Message (will auto close after 3s).', 'info');
-    setTimeout(() => item?.close(), 3000);
+    showMessage('This is a tool Info-Message (will auto close after 3s).', {
+      timeoutMs: 3000,
+    });
   });
 }
