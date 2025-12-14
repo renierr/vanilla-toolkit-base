@@ -136,6 +136,41 @@ function renderOverview() {
   filterAndRender();
 }
 
+// === Scroll-to-top button ===
+function initScrollToTop() {
+  const btn = document.getElementById('scroll-to-top') as HTMLButtonElement | null;
+  if (!btn) return;
+
+  const thresholdPx = 150;
+
+  const setVisible = (visible: boolean) => {
+    btn.classList.toggle('opacity-0', !visible);
+    btn.classList.toggle('pointer-events-none', !visible);
+  };
+
+  const update = () => {
+    setVisible(window.scrollY > thresholdPx);
+  };
+
+  // Throttle scroll updates to animation frames (smoother + cheaper)
+  let scheduled = false;
+  const onScroll = () => {
+    if (scheduled) return;
+    scheduled = true;
+    requestAnimationFrame(() => {
+      scheduled = false;
+      update();
+    });
+  };
+
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  update(); // initial state
+}
+
 // === Routing with hash ===
 function router() {
   const hash = location.hash.slice(1); // without #
@@ -151,3 +186,8 @@ function router() {
 window.addEventListener('hashchange', router);
 window.addEventListener('load', router);
 router(); // immediately on load
+
+// Init UI bits after DOM is ready (script is in <head>)
+window.addEventListener('DOMContentLoaded', () => {
+  initScrollToTop();
+});
