@@ -54,12 +54,79 @@ Use Tailwind's `dark:` prefix for dark mode styles:
 
 ## Create a new tool (30 seconds)
 
+Create a folder inside `src/tools/`. The folder name becomes the tool’s **path/URL slug**.
+
 ```bash
 src/tools/my-tool/
 ├── config.json     # Name + description + configuration
 ├── template.html   # Your layout
 └── index.ts        # Your logic (optional)
 ```
+
+### 1) Add `config.json`
+
+Minimal example:
+
+```json
+{
+  "name": "My Tool",
+  "description": "Does something useful",
+  "draft": false,
+  "example": false
+}
+```
+
+Notes:
+- `name` and `description` are shown on the overview page and used for search.
+- `draft: true` hides the tool from the normal overview (useful while you’re still building it).
+- `example: true` is intended for template/demo tools (you can ignore it in real projects).
+
+Optional fields you can add later:
+- `icon`: an icon id (see **Tool Icons (Lucide)** below)
+- `order` / `sectionId`: for sorting & grouping (see next section)
+
+### 2) Add `template.html`
+
+This is the tool’s UI. Keep it small and composable (cards, inputs, buttons).
+Use Tailwind classes for styling and `dark:` variants for dark mode.
+
+Practical tips:
+- Give your tool a single root container so it’s easy to render/replace.
+- Prefer semantic HTML (`label`, `input`, `button`)—it improves accessibility quickly.
+
+### 3) Add behavior in `index.ts` (optional)
+
+If your tool is interactive, put the logic in `index.ts`.
+Typical responsibilities:
+- Wire up event listeners (click, input, submit)
+- Read/write values from the DOM
+- Implement the actual tool logic (formatting, conversions, generators, etc.)
+
+Keep it defensive:
+- Validate user input before processing
+- Handle empty states (e.g. “nothing entered yet”)
+- Avoid throwing on malformed input—show a message instead
+
+### 4) Run it
+
+Start the dev server and open the app:
+
+```bash
+pnpm run dev
+```
+
+Your tool should appear automatically on the overview page.
+If it doesn’t:
+- Check that the folder is directly under `src/tools/<tool-name>/`
+- Ensure `config.json` is valid JSON (no trailing commas)
+- Restart the dev server after renaming folders/files
+
+### Common patterns (quick checklist)
+
+- **Hide until ready:** set `"draft": true`
+- **Make it discoverable:** write a clear `description` (it powers search)
+- **Keep it stable:** don’t rename the folder unless you’re okay with the URL changing
+
 
 ## Ordering & Section grouping (Overview page)
 
@@ -108,8 +175,6 @@ export const siteConfig = {
 ```
 **Section order:**  
 Sections are rendered in the insertion order of `toolSections` first, followed by any additional sections discovered at runtime.
-
-
 
 
 ## Tool Icons (Lucide)
