@@ -1,0 +1,6 @@
+{
+  "name": "Hello World",
+  "description": "Minimal example tool that shows a Hello World message",
+  "draft": true,
+  "example": true
+}
