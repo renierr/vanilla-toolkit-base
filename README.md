@@ -54,9 +54,9 @@ Use Tailwind's `dark:` prefix for dark mode styles:
 
 ```bash
 src/tools/my-tool/
-├── description.json     # Name + description
-├── template.html        # Your layout
-└── index.ts             # Your logic (optional)
+├── config.json     # Name + description + configuration
+├── template.html   # Your layout
+└── index.ts        # Your logic (optional)
 ```
 
 ### Site configuration override

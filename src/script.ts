@@ -3,6 +3,7 @@ import { fuzzyScore, isDev } from './js/utils.ts';
 import type { Tool } from './js/types';
 import { siteContext } from './config';
 import { renderLayout, renderTool } from './js/render.ts';
+import { parseToolConfig, buildTool } from './js/tool-config.ts';
 
 // apply config values
 document.title = siteContext.config.title;
@@ -10,7 +11,7 @@ const metaDesc = document.querySelector('meta[name="description"]');
 if (metaDesc) metaDesc.setAttribute('content', siteContext.config.description || '');
 
 // Load all tools dynamically
-const descModules = import.meta.glob('./tools/*/description.json', { eager: true });
+const descModules = import.meta.glob('./tools/*/config.json', { eager: true });
 const htmlModules = import.meta.glob('./tools/*/template.html', {
   query: '?raw',
   import: 'default',
@@ -21,17 +22,13 @@ const scriptModules = import.meta.glob('./tools/*/index.ts', { eager: true });
 const tools: Tool[] = [];
 
 for (const path in descModules) {
-  const desc = (descModules[path] as any).default as {
-    name?: string;
-    description?: string;
-    draft?: boolean;
-    example?: boolean;
-  };
-
   const folder = path.match(/\.\/tools\/([^/]+)\//)![1];
 
-  if (!siteContext.config.showExamples && desc.example) continue;
-  if (desc.draft && !isDev) continue;
+  const rawDesc = (descModules[path] as { default?: unknown }).default;
+  const toolConfig = parseToolConfig(rawDesc, folder, { strict: isDev, sourceId: path });
+
+  if (!siteContext.config.showExamples && toolConfig.example) continue;
+  if (toolConfig.draft && !isDev) continue;
   const html =
     (htmlModules[`./tools/${folder}/template.html`] as string) ||
     '<p>No content found, provide a template.html file for your tool</p>';
@@ -39,15 +36,14 @@ for (const path in descModules) {
     | (() => void)
     | undefined;
 
-  tools.push({
-    name: desc.name || folder,
-    description: desc.description || 'No description',
-    path: folder,
-    html,
-    script: initScript,
-    draft: !!desc.draft,
-    example: desc.example || false,
-  });
+  tools.push(
+    buildTool({
+      folder,
+      html,
+      initScript,
+      config: toolConfig,
+    })
+  );
 }
 
 function renderOverview() {
