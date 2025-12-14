@@ -1,6 +1,6 @@
 import type { SiteConfig, SiteContext } from './types';
 
-import { siteConfig as defaultConfig } from './site.config.example';
+import { siteConfig as defaultConfig } from './site.config.template';
 import { isDev } from '../js/utils.ts';
 
 let userConfig: Partial<SiteConfig> = {};
@@ -18,6 +18,6 @@ export const siteContext = { config: siteConfig } as SiteContext;
 
 const missingKeys = Object.keys(defaultConfig).filter((key) => !(key in userConfig));
 if (missingKeys.length > 0 && isDev) {
-  console.warn('New Config-Options available! See site.config.example:', missingKeys.join(', '));
-  console.info('Example: cp src/config/site.config.example.ts src/config/site.config.ts');
+  console.warn('New Config-Options available! See site.config.template:', missingKeys.join(', '));
+  console.info('Example: cp src/config/site.config.template.ts src/config/site.config.ts');
 }
