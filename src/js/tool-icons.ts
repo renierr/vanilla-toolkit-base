@@ -61,6 +61,13 @@ export function registerToolIcons(extra: IconRegistry): void {
     ICONS[normalizeIconId(id)] = icon;
   }
 }
+/**
+ * Return all currently registered icon IDs (including derived-project registrations).
+ * The list is sorted for stable display in demos and docs.
+ */
+export function getRegisteredToolIconIds(): string[] {
+  return Object.keys(ICONS).sort((a, b) => a.localeCompare(b));
+}
 
 /**
  * Optional: template-side typing for known built-in icons.
@@ -98,7 +105,7 @@ export type ToolIconId =
   | 'error'
   | 'sparkles';
 
-// Register built-in template icons (keeps existing behavior)
+// Register built-in template icons
 registerToolIcons({
   // General / tools
   wrench: Wrench,

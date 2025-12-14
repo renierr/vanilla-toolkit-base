@@ -1,0 +1,7 @@
+{
+  "name": "Icon Gallery",
+  "description": "Shows all built-in Lucide icon ids supported by the template.",
+  "icon": "sparkles",
+  "example": true,
+  "draft": false
+}
