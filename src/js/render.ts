@@ -10,6 +10,8 @@ import { renderToolIconSvg } from './tool-icons.ts';
 const headerFinal = replacePlaceholders(headerHtml, siteContext);
 const footerFinal = replacePlaceholders(footerHtml, siteContext);
 
+let currentToolCleanup: (() => void) | undefined;
+
 export function renderLayout(content: string) {
   const app = document.getElementById('app')!;
   app.innerHTML = headerFinal + replacePlaceholders(content, siteContext) + footerFinal;
@@ -17,6 +19,13 @@ export function renderLayout(content: string) {
 }
 
 export function renderTool(tool: Tool | undefined) {
+  // Cleanup previous tool listeners/effects before replacing DOM
+  try {
+    currentToolCleanup?.();
+  } finally {
+    currentToolCleanup = undefined;
+  }
+
   renderLayout(toolPageHtml);
 
   const noToolHtml = `
@@ -35,7 +44,10 @@ export function renderTool(tool: Tool | undefined) {
   }
 
   // call Tool-specific script (if exist)
-  tool?.script?.();
+  const maybeCleanup = tool?.script?.();
+  if (typeof maybeCleanup === 'function') {
+    currentToolCleanup = maybeCleanup;
+  }
 }
 
 export function renderToolCard(tool: Tool) {

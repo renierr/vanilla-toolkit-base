@@ -1,6 +1,6 @@
 import overviewHtml from './pages/overview.html?raw';
 import { fuzzyScore, isDev } from './js/utils.ts';
-import type { Tool } from './js/types';
+import type { Tool, ToolScript } from './js/types';
 import { siteContext } from './config';
 import { renderLayout, renderTool, renderToolCard } from './js/render.ts';
 import { buildTool, parseToolConfig } from './js/tool-config.ts';
@@ -33,7 +33,7 @@ for (const path in descModules) {
     (htmlModules[`./tools/${folder}/template.html`] as string) ||
     '<p>No content found, provide a template.html file for your tool</p>';
   const initScript = (scriptModules[`./tools/${folder}/index.ts`] as any)?.default as
-    | (() => void)
+    | ToolScript
     | undefined;
 
   tools.push(

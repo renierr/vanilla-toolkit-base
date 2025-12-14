@@ -240,7 +240,7 @@ export default function init() {
     }
   };
 
-  document.addEventListener('click', (e) => {
+  const onDocClick = (e: MouseEvent) => {
     const t = e.target as HTMLElement | null;
     if (!t) return;
 
@@ -259,15 +259,13 @@ export default function init() {
     else if (action === 'negateA') negate('A');
     else if (action === 'negateB') negate('B');
     else if (action === 'clearHistory') clearHistory();
-  });
+  };
 
-  copyBtn?.addEventListener('click', copyResult);
-
-  // Keyboard shortcuts:
-  // Enter => "+"
-  // Shift+Enter => "*"
-  // Ctrl/Cmd+L => clear
-  document.addEventListener('keydown', (e) => {
+  const onDocKeyDown = (e: KeyboardEvent) => {
+    // Keyboard shortcuts:
+    // Enter => "+"
+    // Shift+Enter => "*"
+    // Ctrl/Cmd+L => clear
     if (e.key === 'Enter' && !e.ctrlKey && !e.metaKey && !e.altKey) {
       e.preventDefault();
       if (e.shiftKey) compute('*');
@@ -278,9 +276,20 @@ export default function init() {
       e.preventDefault();
       clearAll();
     }
-  });
+  };
+
+  document.addEventListener('click', onDocClick);
+  document.addEventListener('keydown', onDocKeyDown);
+  copyBtn?.addEventListener('click', copyResult);
 
   // Initial render
   setResult(0);
   renderHistory();
+
+  // Cleanup to prevent duplicate listeners when navigating away/back
+  return () => {
+    document.removeEventListener('click', onDocClick);
+    document.removeEventListener('keydown', onDocKeyDown);
+    copyBtn?.removeEventListener('click', copyResult);
+  };
 }

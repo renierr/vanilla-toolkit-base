@@ -107,6 +107,31 @@ Keep it defensive:
 - Handle empty states (e.g. “nothing entered yet”)
 - Avoid throwing on malformed input—show a message instead
 
+**Important: cleanup when navigating between tools**
+
+Tools can be opened/closed via routing, so your `index.ts` may run multiple times.
+If you attach any **global** listeners (e.g. `document.addEventListener`, `window.addEventListener`), timers (`setInterval`), observers, etc.,    
+make sure you return a **cleanup function** that removes them.
+
+```ts
+export default function init() { 
+    const onKeyDown = (e: KeyboardEvent) => { 
+        // ... 
+    };
+    document.addEventListener('keydown', onKeyDown);
+    
+    // Return cleanup to prevent duplicate listeners when navigating away/back 
+    return () => { 
+        document.removeEventListener('keydown', onKeyDown); 
+    }; 
+}
+```
+
+Rule of thumb:
+- Listeners on elements that get replaced with the tool DOM are usually fine.
+- Anything attached to `document` / `window` should be cleaned up.
+
+
 ### 4) Run it
 
 Start the dev server and open the app:
