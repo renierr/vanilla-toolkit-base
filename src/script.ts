@@ -1,5 +1,5 @@
 import overviewHtml from './pages/overview.html?raw';
-import { isDev } from './js/utils.ts';
+import { fuzzyScore, isDev } from './js/utils.ts';
 import type { Tool } from './js/types';
 import { siteConfig } from './config';
 import { renderLayout, renderTool } from './js/render.ts';
@@ -54,10 +54,18 @@ function renderOverview() {
   const searchInput = document.getElementById('search') as HTMLInputElement;
 
   function filterAndRender() {
-    const term = searchInput.value.toLowerCase();
-    const filtered = tools.filter(
-      (t) => t.name.toLowerCase().includes(term) || t.description.toLowerCase().includes(term)
-    );
+    const term = searchInput.value.trim();
+    let filtered = tools;
+    if (term) {
+      filtered = tools
+        .map((tool) => ({
+          tool,
+          score: Math.max(fuzzyScore(tool.name, term), fuzzyScore(tool.description, term)),
+        }))
+        .filter((item) => item.score > -Infinity)
+        .sort((a, b) => b.score - a.score)
+        .map((item) => item.tool);
+    }
 
     grid.innerHTML = filtered
       .map(
