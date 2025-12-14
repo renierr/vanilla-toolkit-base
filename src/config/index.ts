@@ -1,4 +1,4 @@
-import type { SiteConfig } from './types';
+import type { SiteConfig, SiteContext } from './types';
 
 import { siteConfig as defaultConfig } from './site.config.example';
 import { isDev } from '../js/utils.ts';
@@ -13,7 +13,8 @@ if (first) {
   userConfig = mod.siteConfig ?? {};
 }
 
-export const siteConfig = { ...defaultConfig, ...userConfig } as SiteConfig;
+const siteConfig = { ...defaultConfig, ...userConfig } as SiteConfig;
+export const siteContext = { config: siteConfig } as SiteContext;
 
 const missingKeys = Object.keys(defaultConfig).filter((key) => !(key in userConfig));
 if (missingKeys.length > 0 && isDev) {

@@ -3,3 +3,7 @@ export interface SiteConfig {
   description?: string;
   footerText?: string;
 }
+
+export interface SiteContext {
+  config: SiteConfig;
+}

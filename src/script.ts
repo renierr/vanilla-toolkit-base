@@ -1,13 +1,13 @@
 import overviewHtml from './pages/overview.html?raw';
 import { fuzzyScore, isDev } from './js/utils.ts';
 import type { Tool } from './js/types';
-import { siteConfig } from './config';
+import { siteContext } from './config';
 import { renderLayout, renderTool } from './js/render.ts';
 
 // apply config values
-document.title = siteConfig.title;
+document.title = siteContext.config.title;
 const metaDesc = document.querySelector('meta[name="description"]');
-if (metaDesc) metaDesc.setAttribute('content', siteConfig.description || '');
+if (metaDesc) metaDesc.setAttribute('content', siteContext.config.description || '');
 
 // Load all tools dynamically
 const descModules = import.meta.glob('./tools/*/description.json', { eager: true });

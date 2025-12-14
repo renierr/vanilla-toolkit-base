@@ -2,20 +2,17 @@ import headerHtml from '../components/header.html?raw';
 import footerHtml from '../components/footer.html?raw';
 import toolPageHtml from '../pages/tool.html?raw';
 import { setupThemeToggle } from './theme.ts';
-import { siteConfig } from '../config';
+import { siteContext } from '../config';
 import type { Tool } from './types.ts';
+import { replacePlaceholders } from './utils.ts';
+
+const headerFinal = replacePlaceholders(headerHtml, siteContext);
+const footerFinal = replacePlaceholders(footerHtml, siteContext);
 
 export function renderLayout(content: string) {
   const app = document.getElementById('app')!;
-  app.innerHTML = headerHtml + content + footerHtml;
+  app.innerHTML = headerFinal + content + footerFinal;
   setupThemeToggle();
-
-  const footerText = document.getElementById('footer-text');
-  if (footerText) footerText.innerHTML = siteConfig.footerText || '';
-  const headerTitle = document.getElementById('header-title');
-  if (headerTitle) headerTitle.innerHTML = siteConfig.title;
-  const headerDescription = document.getElementById('header-description');
-  if (headerDescription) headerDescription.innerHTML = siteConfig.description || '';
 }
 
 export function renderTool(tool: Tool | undefined) {
