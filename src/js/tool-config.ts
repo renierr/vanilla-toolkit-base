@@ -121,5 +121,6 @@ export function buildTool({ folder, html, initScript, config }: BuildToolParams)
     script: initScript,
     draft: config.draft,
     example: config.example,
+    icon: config.icon,
   };
 }

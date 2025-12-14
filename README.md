@@ -59,6 +59,48 @@ src/tools/my-tool/
 └── index.ts        # Your logic (optional)
 ```
 
+## Tool Icons (Lucide)
+
+Each tool can optionally define an icon in its `config.json`.
+Only a set of predefined icons is supported.
+
+If `icon` is missing or unknown, a default icon is used.
+
+### Available icon ids
+
+Use one of the following (case-insensitive):
+
+- `wrench`
+- `settings`
+- `sliders`
+- `hammer`
+- `ruler`
+- `calculator`
+- `clipboard`
+- `copy`
+- `scantext`
+- `filetext`
+- `filejson`
+- `filecode`
+- `folder`
+- `search`
+- `filter`
+- `list`
+- `grid`
+- `download`
+- `upload`
+- `share`
+- `link`
+- `shield`
+- `lock`
+- `key`
+- `info`
+- `help`
+- `warning`
+- `success`
+- `error`
+- `sparkles`
+
 ### Site configuration override
 
 The default configuration lives in `src/config/site.config.template.ts`.     

@@ -4,6 +4,7 @@ import type { Tool } from './js/types';
 import { siteContext } from './config';
 import { renderLayout, renderTool } from './js/render.ts';
 import { parseToolConfig, buildTool } from './js/tool-config.ts';
+import { renderToolIconSvg } from './js/tool-icons.ts';
 
 // apply config values
 document.title = siteContext.config.title;
@@ -69,21 +70,26 @@ function renderOverview() {
     grid.innerHTML = filtered
       .map(
         (tool) => `
-    <a href="#${tool.path}" class="block p-6 bg-card rounded-xl shadow hover:shadow-xl transition-all border-l-4 ${
-      tool.draft ? 'border-l-draft' : 'border-l-primary'
-    } border-t border-r border-b border-card">
-      <div class="flex justify-between items-start gap-4">
-        <div class="flex-1">
-          <h3 class="text-xl font-bold text-card-title">${tool.name}</h3>
-          <p class="text-card-desc mt-2 text-sm">${tool.description}</p>
-        </div>
-        ${
-          tool.draft
-            ? '<span class="text-xs bg-draft text-draft px-3 py-1 rounded-full font-medium whitespace-nowrap">DRAFT</span>'
-            : ''
-        }
-      </div>
-    </a>
+        <a href="#${tool.path}" class="block p-6 bg-card rounded-xl shadow hover:shadow-xl transition-all border-l-4 ${
+          tool.draft ? 'border-l-draft' : 'border-l-primary'
+        } border-t border-r border-b border-card">
+          <div class="flex justify-between items-start gap-4">
+            <div class="flex items-start gap-4 min-w-0">
+              <div class="shrink-0 text-card-title/90">
+                ${renderToolIconSvg(tool.icon, 'w-6 h-6')}
+              </div>
+              <div class="flex-1 min-w-0">
+                <h3 class="text-xl font-bold text-card-title">${tool.name}</h3>
+                <p class="text-card-desc mt-2 text-sm">${tool.description}</p>
+              </div>
+            </div>
+            ${
+              tool.draft
+                ? '<span class="text-xs bg-draft text-draft px-3 py-1 rounded-full font-medium whitespace-nowrap">DRAFT</span>'
+                : ''
+            }
+          </div>
+        </a>
   `
       )
       .join('');

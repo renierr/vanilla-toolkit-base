@@ -7,6 +7,10 @@ settings:
 importers:
 
   .:
+    dependencies:
+      lucide:
+        specifier: ^0.561.0
+        version: 0.561.0
     devDependencies:
       '@tailwindcss/vite':
         specifier: ^4.1.17
@@ -1567,6 +1571,9 @@ packages:
 
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
+
+  lucide@0.561.0:
+    resolution: {integrity: sha512-XsOpN41YD1B5b05biTZhjlgPiiHXeRD9lqDmo30BKypzuXNiPKEXsGlsdvfHPa6CLP0Wv8Z2OYk2AHPrYkg5rw==}
 
   magic-string@0.25.9:
     resolution: {integrity: sha512-RmF0AsMzgt25qzqqLc1+MbHmhdx0ojF2Fvs4XnOqz2ZOBXzzkEwc/dJQZCYHAn7v1jbVOjAZfK8msRn4BxO4VQ==}
@@ -3687,6 +3694,8 @@ snapshots:
   lru-cache@5.1.1:
     dependencies:
       yallist: 3.1.1
+
+  lucide@0.561.0: {}
 
   magic-string@0.25.9:
     dependencies:
