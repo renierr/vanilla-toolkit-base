@@ -123,36 +123,11 @@ If `icon` is missing or unknown, a default icon is used.
 
 Use one of the following (case-insensitive):
 
-- `wrench`
-- `settings`
-- `sliders`
-- `hammer`
-- `ruler`
-- `calculator`
-- `clipboard`
-- `copy`
-- `scantext`
-- `filetext`
-- `filejson`
-- `filecode`
-- `folder`
-- `search`
-- `filter`
-- `list`
-- `grid`
-- `download`
-- `upload`
-- `share`
-- `link`
-- `shield`
-- `lock`
-- `key`
-- `info`
-- `help`
-- `warning`
-- `success`
-- `error`
-- `sparkles`
+wrench, settings, sliders, hammer, ruler, calculator, clipboard, copy, 
+scantext, filetext, filejson, filecode, folder, search, filter, list, 
+grid, download, upload, share, link, shield, lock, key, info, help, 
+warning, success, error, sparkles, image, file, fileimage, fileadd, 
+filedownload
 
 ### Register custom icons (derived projects)
 
