@@ -19,26 +19,24 @@ export function renderLayout(content: string) {
 }
 
 export function renderTool(tool: Tool | undefined) {
-  if (!tool) {
-    renderLayout(
-      '<div class="container mx-auto px-4 py-16 text-center">' +
-        '<h2 class="text-2xl text-heading">Tool not found</h2>' +
-        '</div>'
-    );
-    return;
-  }
-
   renderLayout(toolPageHtml);
 
+  const noToolHtml = `
+    <div class="container mx-auto px-4 py-16 text-center">
+      <h2 class="text-2xl text-heading">Tool not found</h2>
+    </div>`;
   const contentDiv = document.getElementById('tool-content')!;
-  contentDiv.innerHTML = tool.html;
+  contentDiv.innerHTML = tool ? tool.html : noToolHtml;
 
   // Back button
   const backBtn = document.getElementById('back-btn');
   if (backBtn) {
-    backBtn.addEventListener('click', () => history.back());
+    backBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      location.hash = '';
+    });
   }
 
   // call Tool-specific script (if exist)
-  tool.script?.();
+  tool?.script?.();
 }
