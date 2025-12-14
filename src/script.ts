@@ -47,6 +47,44 @@ for (const path in descModules) {
   );
 }
 
+function renderToolCard(tool: Tool) {
+  return `
+    <a href="#${tool.path}" class="block p-6 bg-card rounded-xl shadow hover:shadow-xl transition-all border-l-4 ${
+      tool.draft ? 'border-l-draft' : 'border-l-primary'
+    } border-t border-r border-b border-card">
+      <div class="flex justify-between items-start gap-4">
+        <div class="flex items-start gap-4 min-w-0">
+          <div class="shrink-0 text-card-title/90">
+            ${renderToolIconSvg(tool.icon, 'w-6 h-6')}
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-xl font-bold text-card-title">${tool.name}</h3>
+            <p class="text-card-desc mt-2 text-sm">${tool.description}</p>
+          </div>
+        </div>
+        ${
+          tool.draft
+            ? '<span class="text-xs bg-draft text-draft px-3 py-1 rounded-full font-medium whitespace-nowrap">DRAFT</span>'
+            : ''
+        }
+      </div>
+    </a>
+  `;
+}
+
+function getSectionMeta(sectionId: string | undefined) {
+  const fallbackId = 'other';
+  const id = sectionId?.trim() || fallbackId;
+
+  const meta = siteContext.config.toolSections?.[id];
+  if (meta) return { id, title: meta.title, description: meta.description };
+
+  // If the sectionId exists but isn't configured, show a readable fallback title.
+  if (sectionId?.trim()) return { id, title: sectionId, description: undefined };
+
+  return { id, title: 'Additional Tools', description: undefined };
+}
+
 function renderOverview() {
   renderLayout(overviewHtml);
 
@@ -56,6 +94,7 @@ function renderOverview() {
   function filterAndRender() {
     const term = searchInput.value.trim();
     let filtered = tools;
+
     if (term) {
       filtered = tools
         .map((tool) => ({
@@ -67,31 +106,55 @@ function renderOverview() {
         .map((item) => item.tool);
     }
 
-    grid.innerHTML = filtered
-      .map(
-        (tool) => `
-        <a href="#${tool.path}" class="block p-6 bg-card rounded-xl shadow hover:shadow-xl transition-all border-l-4 ${
-          tool.draft ? 'border-l-draft' : 'border-l-primary'
-        } border-t border-r border-b border-card">
-          <div class="flex justify-between items-start gap-4">
-            <div class="flex items-start gap-4 min-w-0">
-              <div class="shrink-0 text-card-title/90">
-                ${renderToolIconSvg(tool.icon, 'w-6 h-6')}
-              </div>
-              <div class="flex-1 min-w-0">
-                <h3 class="text-xl font-bold text-card-title">${tool.name}</h3>
-                <p class="text-card-desc mt-2 text-sm">${tool.description}</p>
-              </div>
+    // Sort tools (globally) by order then name (stable + predictable)
+    const sorted = [...filtered].sort((a, b) => {
+      if (a.order !== b.order) return a.order - b.order;
+      return a.name.localeCompare(b.name);
+    });
+
+    // Group by sectionId
+    const sectionMap = new Map<
+      string,
+      { meta: ReturnType<typeof getSectionMeta>; items: Tool[] }
+    >();
+    for (const tool of sorted) {
+      const meta = getSectionMeta(tool.sectionId);
+      const key = meta.id;
+      const entry = sectionMap.get(key) ?? { meta, items: [] };
+      entry.items.push(tool);
+      sectionMap.set(key, entry);
+    }
+
+    // Render sections in a predictable order:
+    // 1) sections configured in SiteConfig (in object insertion order)
+    // 2) any other sections encountered
+    const configuredOrder = Object.keys(siteContext.config.toolSections ?? {});
+    const encountered = Array.from(sectionMap.keys());
+
+    const keysInOrder = [
+      ...configuredOrder.filter((k) => sectionMap.has(k)),
+      ...encountered.filter((k) => !configuredOrder.includes(k)),
+    ];
+
+    grid.innerHTML = keysInOrder
+      .map((key) => {
+        const section = sectionMap.get(key)!;
+        const headerHtml = `
+          <div class="md:col-span-2 lg:col-span-3">
+            <div class="mb-4">
+              <h3 class="text-2xl font-bold text-heading">${section.meta.title}</h3>
+              ${
+                section.meta.description
+                  ? `<p class="text-sm text-muted mt-1">${section.meta.description}</p>`
+                  : ''
+              }
             </div>
-            ${
-              tool.draft
-                ? '<span class="text-xs bg-draft text-draft px-3 py-1 rounded-full font-medium whitespace-nowrap">DRAFT</span>'
-                : ''
-            }
           </div>
-        </a>
-  `
-      )
+        `;
+
+        const cardsHtml = section.items.map(renderToolCard).join('');
+        return headerHtml + cardsHtml;
+      })
       .join('');
   }
 

@@ -3,5 +3,7 @@
   "description": "Shows all built-in Lucide icon ids supported by the template.",
   "icon": "fileimage",
   "example": true,
-  "draft": false
+  "draft": false,
+  "sectionId": "examples",
+  "order": 3
 }

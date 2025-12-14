@@ -59,6 +59,57 @@ src/tools/my-tool/
 └── index.ts        # Your logic (optional)
 ```
 
+## Ordering & Section grouping (Overview page)
+
+Tools can be **sorted** and **grouped into sections** on the overview page by adding two optional fields to a tool’s `config.json`:
+
+- `order` *(number)*: controls the position within a section (ascending)
+- `sectionId` *(string)*: groups tools into a named section
+
+### Example `config.json`
+
+```json
+{ "name": "My Tool", "description": "Does something useful", "draft": false, "example": false, "sectionId": "examples", "order": 1 }
+```
+
+### How sorting works
+
+- Tools are sorted by:
+    1. `order` (ascending)
+    2. `name` (A → Z) as a tie-breaker
+
+This means you can keep the list stable and intentional, even when multiple tools share the same `order`.
+
+### How sections work
+
+- Tools with the same `sectionId` are rendered under the same section header.
+- Section header text (title + optional description) is configured in the site config (see below).
+- If a tool has a `sectionId` that is **not configured**, the UI falls back to showing the raw `sectionId` as the section title.
+- If a tool has **no** `sectionId`, it is grouped into a default “other” section.
+
+### Configure section titles via `SiteConfig`
+
+Section titles and descriptions live in the site configuration.
+
+1. Copy the template config:
+    - `src/config/site.config.template.ts` → `src/config/site.config.ts`
+2. Define your sections (keys are the `sectionId`s):
+
+```ts
+export const siteConfig = { 
+  // ... 
+  toolSections: { 
+      examples: { title: 'Examples', description: 'Demo tools that show how the template works.', }, 
+      general: { title: 'General', description: 'Everyday helpers and utilities.', }, 
+  }, 
+};
+```
+**Section order:**  
+Sections are rendered in the insertion order of `toolSections` first, followed by any additional sections discovered at runtime.
+
+
+
+
 ## Tool Icons (Lucide)
 
 Each tool can optionally define an icon in its `config.json`.

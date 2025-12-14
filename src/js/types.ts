@@ -7,4 +7,6 @@ export interface Tool {
   draft: boolean;
   example: boolean; // only for template project to mark the examples
   icon?: string;
+  order: number;
+  sectionId?: string;
 }

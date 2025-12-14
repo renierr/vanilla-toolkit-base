@@ -9,6 +9,9 @@ export type ToolConfig = {
   tags: string[];
   keywords: string[];
   icon?: string;
+
+  order: number;
+  sectionId?: string;
 };
 
 type BuildToolParams = {
@@ -24,6 +27,8 @@ const DEFAULTS: Omit<ToolConfig, 'name'> = {
   example: false,
   tags: [],
   keywords: [],
+  order: 0,
+  sectionId: undefined,
 };
 
 type ParseOptions = {
@@ -51,6 +56,10 @@ function asString(v: unknown): string | undefined {
 
 function asBool(v: unknown): boolean | undefined {
   return typeof v === 'boolean' ? v : undefined;
+}
+
+function asNumber(v: unknown): number | undefined {
+  return typeof v === 'number' && Number.isFinite(v) ? v : undefined;
 }
 
 function asStringArray(v: unknown): string[] | undefined {
@@ -97,9 +106,16 @@ export function parseToolConfig(
   if (raw.icon !== undefined && typeof raw.icon !== 'string') {
     failOrSkip(`${ctx}: Field "icon" must be a string, got ${typeOf(raw.icon)}.`, strict);
   }
+  if (raw.order !== undefined && typeof raw.order !== 'number') {
+    failOrSkip(`${ctx}: Field "order" must be a number, got ${typeOf(raw.order)}.`, strict);
+  }
+  if (raw.sectionId !== undefined && typeof raw.sectionId !== 'string') {
+    failOrSkip(`${ctx}: Field "sectionId" must be a string, got ${typeOf(raw.sectionId)}.`, strict);
+  }
 
   const name = asString(raw.name)?.trim() || fallbackName;
   const description = asString(raw.description)?.trim() || DEFAULTS.description;
+  const sectionId = asString(raw.sectionId)?.trim() || undefined;
 
   return {
     name,
@@ -109,6 +125,8 @@ export function parseToolConfig(
     tags: asStringArray(raw.tags) ?? DEFAULTS.tags,
     keywords: asStringArray(raw.keywords) ?? DEFAULTS.keywords,
     icon: asString(raw.icon),
+    order: asNumber(raw.order) ?? DEFAULTS.order,
+    sectionId,
   };
 }
 
@@ -122,5 +140,7 @@ export function buildTool({ folder, html, initScript, config }: BuildToolParams)
     draft: config.draft,
     example: config.example,
     icon: config.icon,
+    order: config.order,
+    sectionId: config.sectionId,
   };
 }

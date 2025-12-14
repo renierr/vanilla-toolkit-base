@@ -3,5 +3,7 @@
   "description": "Demonstrates showProgress(...) and showMessage(...) helpers",
   "icon": "hammer",
   "draft": false,
-  "example": true
+  "example": true,
+  "sectionId": "examples",
+  "order": 2
 }

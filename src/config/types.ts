@@ -3,6 +3,13 @@ export interface SiteConfig {
   description?: string;
   footerText?: string;
   showExamples: boolean;
+  toolSections?: Record<
+    string,
+    {
+      title: string;
+      description?: string;
+    }
+  >;
 }
 
 export interface SiteContext {

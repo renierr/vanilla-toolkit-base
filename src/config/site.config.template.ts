@@ -6,4 +6,14 @@ export const siteConfig = {
   description: 'Collection of useful vanilla JavaScript tools – no framework, easily extendable',
   footerText: '© 2025 <span class="font-semibold text-brand">Vanilla Toolkit</span> Made with ❤️',
   showExamples: true, // override me to remove the example tools
+  toolSections: {
+    general: {
+      title: 'General',
+      description: 'General helper and Utilities.',
+    },
+    examples: {
+      title: 'Examples',
+      description: 'Demo-Tools, to show some tools and structure.',
+    },
+  },
 } satisfies SiteConfig;
