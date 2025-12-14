@@ -107,6 +107,22 @@ Keep it defensive:
 - Handle empty states (e.g. “nothing entered yet”)
 - Avoid throwing on malformed input—show a message instead
 
+**Export style**
+
+Your tool entry can be exported either as a default export **or** as a named `init` export:
+
+```ts
+// Default export
+export default function init() {
+  // ...
+}
+
+// Named export
+export function init() {
+  // ...
+}
+```
+
 **Important: cleanup when navigating between tools**
 
 Tools can be opened/closed via routing, so your `index.ts` may run multiple times.

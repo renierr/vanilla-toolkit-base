@@ -1,4 +1,4 @@
-export default function init() {
+export function init() {
   const btn = document.getElementById('convert-btn') as HTMLButtonElement | null;
   const input = document.getElementById('input-date') as HTMLInputElement | null;
   const output = document.getElementById('output') as HTMLElement | null;

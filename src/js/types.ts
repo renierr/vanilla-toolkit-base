@@ -1,4 +1,5 @@
 export type ToolScript = () => void | (() => void);
+export type ToolModule = { default?: ToolScript; init?: ToolScript };
 
 export interface Tool {
   name: string;
