@@ -1,4 +1,4 @@
-import { hideProgress, showMessage, showProgress } from '../../js/utils.ts';
+import { showMessage, showProgress } from '../../js/utils.ts';
 
 export default function init() {
   const btnProgress = document.getElementById('demo-progress') as HTMLButtonElement | null;
@@ -7,11 +7,7 @@ export default function init() {
   const btnAlert = document.getElementById('demo-alert') as HTMLButtonElement | null;
 
   btnProgress?.addEventListener('click', () => {
-    showProgress('Simulate work… please wait.');
-
-    window.setTimeout(() => {
-      hideProgress();
-    }, 2000);
+    showProgress('Simulate work… please wait.', { timeoutMs: 5000, tooLongMs: 2000 });
   });
 
   btnInfo?.addEventListener('click', () => showMessage('This is a tool Info-Message.', 'info'));

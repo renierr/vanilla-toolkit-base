@@ -37,7 +37,17 @@
       class="hidden fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4"
       aria-hidden="true"
     >
-      <div class="w-full max-w-md rounded-2xl border border-card bg-card shadow-xl p-6">
+      <div class="relative w-full max-w-md rounded-2xl border border-card bg-card shadow-xl p-6">
+        <button
+          id="ui-progress-close"
+          type="button"
+          class="hidden absolute top-3 right-3 h-9 w-9 items-center justify-center rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition text-heading"
+          aria-label="Close progress"
+          title="Close"
+        >
+          &#10005;
+        </button>
+
         <div class="flex items-center gap-4">
           <svg
             class="h-6 w-6 animate-spin text-heading"
@@ -65,15 +75,6 @@
             <div class="text-sm text-card-desc">Progress</div>
             <div id="ui-progress-text" class="text-lg font-semibold text-heading">Working…</div>
           </div>
-
-          <button
-            type="button"
-            class="inline-flex h-9 px-3 items-center justify-center rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition text-sm"
-            aria-label="Close progress"
-            onclick="window.hideProgress && window.hideProgress()"
-          >
-            Close
-          </button>
         </div>
       </div>
     </div>
