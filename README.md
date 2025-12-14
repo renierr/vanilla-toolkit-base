@@ -1,5 +1,7 @@
 # Vanilla Toolkit
 
+![Preview](./readme-preview.png)
+
 Minimalistic, lightning-fast tool collection  
 Vite + TypeScript + Tailwind – **no React, no framework**
 
