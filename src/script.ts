@@ -25,10 +25,12 @@ for (const path in descModules) {
     name?: string;
     description?: string;
     draft?: boolean;
+    example?: boolean;
   };
 
   const folder = path.match(/\.\/tools\/([^/]+)\//)![1];
 
+  if (!siteContext.config.showExamples && desc.example) continue;
   if (desc.draft && !isDev) continue;
   const html =
     (htmlModules[`./tools/${folder}/template.html`] as string) ||
@@ -44,6 +46,7 @@ for (const path in descModules) {
     html,
     script: initScript,
     draft: !!desc.draft,
+    example: desc.example || false,
   });
 }
 

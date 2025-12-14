@@ -1,4 +1,6 @@
 {
   "name": "Calculator",
-  "description": "Simple calculator with basic arithmetic operations"
+  "description": "Simple calculator with basic arithmetic operations",
+  "draft": true,
+  "example": true
 }

@@ -5,4 +5,5 @@ export interface Tool {
   html: string;
   script?: () => void;
   draft: boolean;
+  example: boolean; // only for template project to mark the examples
 }
