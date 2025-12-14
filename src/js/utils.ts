@@ -54,3 +54,78 @@ export const replacePlaceholders = (templateHtml: string, context: any): string 
   });
   return output;
 };
+
+export type MessageType = 'info' | 'warning' | 'alert';
+
+function classesForType(type: MessageType) {
+  switch (type) {
+    case 'alert':
+      return { wrap: 'msg-wrap-alert', badge: 'msg-badge-alert' };
+    case 'warning':
+      return { wrap: 'msg-wrap-warning', badge: 'msg-badge-warning' };
+    case 'info':
+    default:
+      return { wrap: 'msg-wrap-info', badge: 'msg-badge-info' };
+  }
+}
+
+export function showProgress(message: string, options = { visible: true }) {
+  const el = document.getElementById('ui-progress');
+  const textEl = document.getElementById('ui-progress-text');
+  if (!el || !textEl) return;
+
+  const visible = options && typeof options.visible === 'boolean' ? options.visible : true;
+  textEl.textContent = (message ?? 'Working…').toString();
+
+  el.classList.toggle('hidden', !visible);
+  el.setAttribute('aria-hidden', visible ? 'false' : 'true');
+}
+
+export function hideProgress() {
+  showProgress('', { visible: false });
+}
+
+export function showMessage(message: string, type: MessageType) {
+  const host = document.getElementById('ui-messages');
+  if (!host) return;
+
+  const msgType = type || 'info';
+  const c = classesForType(msgType);
+
+  const item = document.createElement('div');
+  item.className =
+    'pointer-events-auto w-full max-w-xl rounded-xl border shadow-lg backdrop-blur px-4 py-3 flex gap-3 items-start ' +
+    c.wrap;
+
+  item.setAttribute('role', msgType === 'info' ? 'status' : 'alert');
+
+  const badge = document.createElement('span');
+  badge.className =
+    'inline-flex items-center rounded-full px-2 py-1 text-xs font-semibold whitespace-nowrap ' +
+    c.badge;
+  badge.textContent = msgType.toUpperCase();
+
+  const text = document.createElement('div');
+  text.className = 'flex-1 text-sm leading-relaxed';
+  text.textContent = (message ?? '').toString();
+
+  const closeBtn = document.createElement('button');
+  closeBtn.type = 'button';
+  closeBtn.className =
+    'ml-2 inline-flex h-8 w-8 items-center justify-center rounded-lg border border-white/10 bg-white/5 hover:bg-white/10 transition';
+  closeBtn.setAttribute('aria-label', 'Close message');
+  closeBtn.innerHTML = '&#10005;';
+
+  function close() {
+    item.remove();
+  }
+  closeBtn.addEventListener('click', close);
+
+  item.appendChild(badge);
+  item.appendChild(text);
+  item.appendChild(closeBtn);
+
+  host.appendChild(item);
+
+  return { close };
+}

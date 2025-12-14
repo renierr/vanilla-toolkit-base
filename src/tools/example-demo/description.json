@@ -1,0 +1,6 @@
+{
+  "name": "UI Utils Demo",
+  "description": "Demonstrates showProgress(...) and showMessage(...) helpers",
+  "draft": false,
+  "example": true
+}
