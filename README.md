@@ -64,3 +64,27 @@ src/tools/my-tool/
 The default configuration lives in `src/config/site.config.example.ts`.     
 To customize the configuration for your project, copy the file to the Name `site.config.ts` and change any configuration values.
 See types in `src/config/site.config.ts` for possible values.
+
+---
+
+## Template Placeholders
+
+Brief and practical:
+
+- Syntax: Use `{{ key.path }}` inside your HTML templates, e.g. `{{ config.title }}`.
+- When they are replaced: Placeholders are replaced by the central function `replacePlaceholders()` (see `src/js/utils.ts`). In this codebase the header and footer templates are processed before being inserted into the DOM (`src/js/render.ts`).
+- Where the values come from: Values are read from the exported `siteContext` in `src/config/index.ts`. `siteContext` merges the defaults from `site.config.example.ts` with an optional `src/config/site.config.ts` file.
+- How it works: `replacePlaceholders()` uses the regex `/\{\{(.+?)\}\}/g`, trims the path and resolves the value using dot-notation with `getValueByDotNotation()`.
+- Missing values: If a placeholder cannot be resolved, a console warning is emitted and the placeholder is replaced with a visible marker such as `[{{...} NOT FOUND]` to make the issue obvious.
+- Note about tool templates: Tool-specific templates (`src/tools/*/template.html`) are loaded in `src/script.ts` and are currently not automatically processed with `replacePlaceholders()` before insertion. If you want placeholders in tool templates, call `replacePlaceholders(toolHtml, siteContext)` before inserting the HTML.
+
+Example (Template → Result):
+
+```html
+<!-- Template -->
+<h1>{{ config.title }}</h1>
+
+<!-- After replacement -->
+<h1>Vanilla Toolkit</h1>
+```
+
