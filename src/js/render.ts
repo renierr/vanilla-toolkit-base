@@ -19,9 +19,8 @@ export function renderTool(tool: Tool | undefined) {
   renderLayout(toolPageHtml);
 
   const noToolHtml = `
-    <div class="container mx-auto px-4 py-16 text-center">
-      <h2 class="text-2xl text-heading">Tool not found</h2>
-    </div>`;
+    <h2 class="text-2xl text-heading">Tool not found</h2>
+    `;
   const contentDiv = document.getElementById('tool-content')!;
   contentDiv.innerHTML = tool ? tool.html : noToolHtml;
 
