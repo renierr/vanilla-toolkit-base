@@ -1,8 +1,7 @@
-# Welcome! 
+# Vanilla Toolkit
 
-This repo contains the base setup for the template.    
-The complete “how to use it” documentation is located in template/README_TEMPLATE.md.     
+> GitHub shows this `README.md` on the repository front page.  
+> The actual template documentation is maintained in `templates/README_TEMPLATE.md`.  
+> → Open: [Template README](templates/README_TEMPLATE.md)
 
-→ Start here: [template README](template/README_TEMPLATE.md)
-
-Derived projects can override this file.
+<!-- the rest of your existing README content can follow below -->
