@@ -4,6 +4,8 @@ import type { SiteConfig } from './types';
 export const siteConfig = {
   title: 'Vanilla Toolkit',
   description: 'Collection of useful vanilla JavaScript tools – no framework, easily extendable',
+  logoPath: '/favicon.svg',
+  logoAlt: 'Vanilla Toolkit',
   footerText: '© 2025 <span class="font-semibold text-brand">Vanilla Toolkit</span> Made with ❤️',
   showExamples: true, // override me to remove the example tools
   toolSections: {
