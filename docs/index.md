@@ -179,7 +179,14 @@ Tools can be **sorted** and **grouped into sections** on the overview page by ad
 ### Example `config.json`
 
 ```json
-{ "name": "My Tool", "description": "Does something useful", "draft": false, "example": false, "sectionId": "examples", "order": 1 }
+{ 
+  "name": "My Tool", 
+  "description": "Does something useful", 
+  "draft": false, 
+  "example": false, 
+  "sectionId": "examples", 
+  "order": 1
+}
 ```
 
 ### How sorting works
