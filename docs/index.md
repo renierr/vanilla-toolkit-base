@@ -360,4 +360,40 @@ Use Tailwind's `dark:` prefix for dark mode styles:
 
 ---
 
+## Extending `SiteContext` (derived projects)
+
+This template is meant to be cloned (GitHub template). To allow project-specific context fields without modifying the core template types, `SiteContext` exposes a TypeScript **declaration merging** extension point.
+
+### What you can extend
+
+`SiteContext` automatically includes everything you add to the global interface `SiteContextCustom`.
+
+### How to use it in your cloned project
+
+1) Create a declaration file (any name is fine), for example:
+
+- `src/site-context.custom.d.ts`
+
+2) Add your custom fields by extending `SiteContextCustom`:
+
+```ts
+declare global {
+    interface SiteContextCustom {
+        custom?: { foo: string; bar?: number; };
+    }
+}
+export {};
+```
+
+After this, your `SiteContext` type will include `custom`, `features`, etc. everywhere it’s used.    
+You can now use it in your tool configs and templates.
+
+### Notes / troubleshooting
+
+- Make sure TypeScript includes the file. Your `tsconfig.json` should include something like `src/**/*.d.ts` (or `src/**`).
+- To avoid naming collisions, consider grouping your additions under a single top-level key (e.g. `custom`).
+
+
+---
+
 And above all, have fun with this template! 😊

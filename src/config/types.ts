@@ -12,6 +12,13 @@ export interface SiteConfig {
   >;
 }
 
-export interface SiteContext {
+// Extension-Point for derived projects
+declare global {
+  interface SiteContextCustom {}
+}
+
+export interface SiteContext extends SiteContextCustom {
   config: SiteConfig;
 }
+
+export {};
