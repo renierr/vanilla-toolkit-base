@@ -290,6 +290,7 @@ Brief and practical:
  
 Example (Template → Result):
 
+{% raw %}
 ```html
 <!-- Template -->
 <h1>{{ config.title }}</h1>
@@ -297,4 +298,5 @@ Example (Template → Result):
 <!-- After replacement -->
 <h1>Vanilla Toolkit</h1>
 ```
+{% endraw %}
 
