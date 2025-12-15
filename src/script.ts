@@ -1,6 +1,6 @@
 import overviewHtml from './pages/overview.html?raw';
 import { fuzzyScore, isDev } from './js/utils.ts';
-import type { Tool, ToolModule } from './js/types';
+import type { CustomMainContext, CustomMainModule, Tool, ToolModule } from './js/types';
 import { siteContext } from './config';
 import { renderLayout, renderTool, renderToolCard } from './js/render.ts';
 import { buildTool, parseToolConfig } from './js/tool-config.ts';
@@ -182,16 +182,48 @@ function router() {
   }
 }
 
-// Start + hash changes
-window.addEventListener('hashchange', router);
+// custom entry point hook
+function invokeOptionalMain(ctx: CustomMainContext): Promise<void> | void {
+  const userMainModules = import.meta.glob('./main.ts'); // {} if file doesn't exist
+  const importUserMain = userMainModules['./main.ts'];
+  if (!importUserMain) return;
 
-// Init UI bits + initial route after DOM is ready
-if (document.readyState === 'loading') {
-  window.addEventListener('DOMContentLoaded', () => {
-    initScrollToTop();
-    router();
-  });
-} else {
+  return importUserMain()
+    .then((mod) => mod as CustomMainModule)
+    .then((mod) => {
+      const entry =
+        typeof mod.default === 'function'
+          ? mod.default
+          : typeof mod.init === 'function'
+            ? mod.init
+            : undefined;
+
+      return entry?.(ctx);
+    })
+    .then(() => undefined)
+    .catch((err) => {
+      console.warn('[template] Failed to load optional src/main.ts:', err);
+    });
+}
+
+async function boot() {
+  await invokeOptionalMain({
+    tools,
+  } as CustomMainContext);
+
+  if (document.readyState === 'loading') {
+    await new Promise<void>((resolve) => {
+      window.addEventListener('DOMContentLoaded', () => resolve(), { once: true });
+    });
+  }
+
   initScrollToTop();
+
+  // Hash routing only after DOM is ready (prevents early render issues)
+  window.addEventListener('hashchange', router);
+
+  // Initial route
   router();
 }
+
+void boot();

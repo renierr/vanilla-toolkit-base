@@ -31,3 +31,12 @@ export interface Tool {
   order: number;
   sectionId?: string;
 }
+
+export type CustomMainContext = {
+  tools: Tool[];
+};
+
+export type CustomMainModule = {
+  default?: (ctx: CustomMainContext) => void | Promise<void>;
+  init?: (ctx: CustomMainContext) => void | Promise<void>;
+};

@@ -12,49 +12,10 @@ Vite + TypeScript + Tailwind – **no React, no framework**
 - Unified design with header & footer
 - 100% offline-capable
 
-## Dark/Light Mode
-
-All tools automatically support light and dark mode via **Tailwind CSS class strategy**.
-
-The theme is controlled by the `dark` class on `<html>`:
-
-- **Light mode**: `<html>` (no class)
-- **Dark mode**: `<html class="dark">`
-
-Users can toggle via the theme button in the header. The preference is saved in localStorage.
-
-### Configure Dark Mode in Your Tool Templates
-
-Use Tailwind's `dark:` prefix for dark mode styles:
-
-```html
-<!-- Light: white bg, Dark: slate-800 bg -->
-<div class="bg-white dark:bg-slate-800">
-    <!-- Light: gray-900 text, Dark: white text -->
-    <p class="text-gray-900 dark:text-white">Content</p>
-</div>
-```
-
-**Common Color Pairs:**
-| Light | Dark | Use Case |
-|-------|------|----------|
-| `bg-white` | `dark:bg-slate-800` | Cards, panels |
-| `bg-gray-50` | `dark:bg-slate-900` | Backgrounds |
-| `text-gray-900` | `dark:text-white` | Headings, main text |
-| `text-gray-600` | `dark:text-slate-300` | Secondary text |
-| `border-gray-200` | `dark:border-slate-700` | Borders |
-| `bg-blue-600` | `dark:bg-blue-500` | Buttons, accents |
-
-**Focus & Hover States:**
-
-```html
-<input class="focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400">
-<button class="hover:bg-blue-700 dark:hover:bg-blue-600">Click</button>
-```
-
 ## Create a new tool (30 seconds)
 
-Create a folder inside `src/tools/`. The folder name becomes the tool’s **path/URL slug**.
+Create a folder inside `src/tools/`. 
+The folder name becomes the tool’s **path/URL slug**.
 
 ```bash
 src/tools/my-tool/
@@ -147,7 +108,6 @@ Rule of thumb:
 - Listeners on elements that get replaced with the tool DOM are usually fine.
 - Anything attached to `document` / `window` should be cleaned up.
 
-
 ### 4) Run it
 
 Start the dev server and open the app:
@@ -167,6 +127,52 @@ If it doesn’t:
 - **Hide until ready:** set `"draft": true`
 - **Make it discoverable:** write a clear `description` (it powers search)
 - **Keep it stable:** don’t rename the folder unless you’re okay with the URL changing
+
+
+## Optional: `src/main.ts` (custom startup invocation)
+
+In addition to per-tool scripts, you can add an optional **project-level entry hook**: `src/main.ts`.
+
+If the file exists, it will be auto-imported and executed **once on startup** — **before** the initial route (overview/tool) is rendered.  
+This is useful for global, one-time setup such as:
+
+- registering additional / overriding icons
+- adding global event listeners
+- initializing app-wide utilities
+- debugging/logging (e.g. number of loaded tools)
+
+### Export shape
+
+You can provide either a default export **or** a named `init` export. Both may be `async`:
+
+```ts
+// src/main.ts 
+import type { CustomMainContext } from './js/types';
+
+export default function main(ctx: CustomMainContext) { 
+    console.log('Loaded tools:', ctx.tools.length); 
+    // global setup... 
+}
+
+// alternatively: 
+export function init(ctx: CustomMainContext) { 
+    // ... 
+}
+```
+
+### Context (`ctx`)
+
+Currently, the context contains the already-discovered tool list:
+
+- `ctx.tools`: all tools (including metadata), as used later for overview + routing.
+
+### Important note about side effects
+
+This `main.ts` invocation is a **one-time hook** (not a routing lifecycle).  
+If you register global side effects here
+(e.g. `window.addEventListener`, timers, observers),
+you are responsible for managing cleanup yourself — unlike tool `index.ts`,
+which can return a cleanup function.
 
 
 ## Ordering & Section grouping (Overview page)
@@ -225,6 +231,13 @@ export const siteConfig = {
 Sections are rendered in the insertion order of `toolSections` first, followed by any additional sections discovered at runtime.
 
 
+### Site configuration override
+
+The default configuration lives in `src/config/site.config.template.ts`.     
+To customize the configuration for your project, copy the file to the Name `site.config.ts` and change any configuration values.
+See types in `src/config/site.config.ts` for possible values.
+
+
 ## Tool Icons (Lucide)
 
 Each tool can optionally define an icon in its `config.json`.
@@ -250,7 +263,7 @@ This template exposes an icon registry so derived projects can add (or override)
 
 2) Import any additional icons you want from `lucide`.
 
-3) Register them at once during startup.
+3) Register them at once during startup (see `main.ts` hook above).
 
 ```ts
 import { registerToolIcons } from 
@@ -266,20 +279,17 @@ registerToolIcons({
 Now you can reference your new icon IDs from any tool `config.json`:
 
 ```json
-{ "name": "My Tool", "description": "Does something useful", "icon": "brain" }
+{ 
+  "name": "My Tool", 
+  "description": "Does something useful", 
+  "icon": "brain"
+}
 ```
 
 Notes:
 - IDs are normalized (trimmed + lowercased), so `Brain`, `brain`, and `  BRAIN  ` all match.
 - If an ID is unknown, the renderer falls back to a default icon.
 - If you register an existing ID, it will override the built-in icon for that ID.
-
-
-### Site configuration override
-
-The default configuration lives in `src/config/site.config.template.ts`.     
-To customize the configuration for your project, copy the file to the Name `site.config.ts` and change any configuration values.
-See types in `src/config/site.config.ts` for possible values.
 
 ---
 
@@ -292,7 +302,6 @@ Brief and practical:
 - Where the values come from: Values are read from the exported `siteContext` in `src/config/index.ts`. `siteContext` merges the defaults from `site.config.template.ts` with an optional `src/config/site.config.ts` file.
 - How it works: `replacePlaceholders()` uses the regex `/\{\{(.+?)\}\}/g`, trims the path and resolves the value using dot-notation with `getValueByDotNotation()`.
 - Missing values: If a placeholder cannot be resolved, a console warning is emitted and the placeholder is replaced with a visible marker such as `[{{...} NOT FOUND]` to make the issue obvious.
-- Note about tool templates: Tool-specific templates (`src/tools/*/template.html`) are loaded in `src/script.ts` and are currently not automatically processed with `replacePlaceholders()` before insertion. If you want placeholders in tool templates, call `replacePlaceholders(toolHtml, siteContext)` before inserting the HTML.
 {% endraw %}
  
 Example (Template → Result):
@@ -307,3 +316,48 @@ Example (Template → Result):
 ```
 {% endraw %}
 
+---
+
+## Dark/Light Mode
+
+All tools automatically support light and dark mode via **Tailwind CSS class strategy**.
+
+The theme is controlled by the `dark` class on `<html>`:
+
+- **Light mode**: `<html>` (no class)
+- **Dark mode**: `<html class="dark">`
+
+Users can toggle via the theme button in the header. The preference is saved in localStorage.
+
+### Configure Dark Mode in Your Tool Templates
+
+Use Tailwind's `dark:` prefix for dark mode styles:
+
+```html
+<!-- Light: white bg, Dark: slate-800 bg -->
+<div class="bg-white dark:bg-slate-800">
+    <!-- Light: gray-900 text, Dark: white text -->
+    <p class="text-gray-900 dark:text-white">Content</p>
+</div>
+```
+
+**Common Color Pairs:**
+| Light | Dark | Use Case |
+|-------|------|----------|
+| `bg-white` | `dark:bg-slate-800` | Cards, panels |
+| `bg-gray-50` | `dark:bg-slate-900` | Backgrounds |
+| `text-gray-900` | `dark:text-white` | Headings, main text |
+| `text-gray-600` | `dark:text-slate-300` | Secondary text |
+| `border-gray-200` | `dark:border-slate-700` | Borders |
+| `bg-blue-600` | `dark:bg-blue-500` | Buttons, accents |
+
+**Focus & Hover States:**
+
+```html
+<input class="focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400">
+<button class="hover:bg-blue-700 dark:hover:bg-blue-600">Click</button>
+```
+
+---
+
+And above all, have fun with this template! 😊
