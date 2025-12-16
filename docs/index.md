@@ -137,8 +137,8 @@ This is supported by the project’s `pnpm-workspace.yaml` setup.
 The tool `example-package` in this project add its own dependencies:    
 _(demo purpose only with a lightweight dependency)_
 
+`// src/tools/example-package/package.json`
 ```json
-// src/tools/example-package/package.json
 {
   "name": "example-package",
   "version": "1.0.0",
