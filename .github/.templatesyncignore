@@ -30,4 +30,5 @@ public/manifest.json
 # Other files may be project-specific. Especially the hooks
 src/main.ts
 src/*.custom.d.ts
+src/css/custom.css
 

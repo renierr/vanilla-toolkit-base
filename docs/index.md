@@ -385,6 +385,11 @@ Use Tailwind's `dark:` prefix for dark mode styles:
 <button class="hover:bg-blue-700 dark:hover:bg-blue-600">Click</button>
 ```
 
+### Custom styles
+To avoid merge conflicts with the template repository, an empty custom.css file is included in the index HTML.
+
+Use this file to add/override any custom styles for your tool templates.
+
 ---
 
 ## Extending `SiteContext` (derived projects)
