@@ -128,6 +128,33 @@ If it doesn’t:
 - **Make it discoverable:** write a clear `description` (it powers search)
 - **Keep it stable:** don’t rename the folder unless you’re okay with the URL changing
 
+## Tool-specific dependencies (`pnpm-workspace.yaml`)
+
+Each tool can declare its own dependencies by adding a `package.json` inside its folder.   
+This is supported by the project’s `pnpm-workspace.yaml` setup.
+
+**Example:**  
+The tool `example-package` in this project add its own dependencies:    
+_(demo purpose only with a lightweight dependency)_
+
+```json
+// src/tools/example-package/package.json
+{
+  "name": "example-package",
+  "version": "1.0.0",
+  "dependencies": {
+    "is-odd": "3.0.1"
+  }
+}
+```
+
+- Run pnpm install at the project root to install all tool dependencies.
+- Each tool’s dependencies are isolated and won’t affect others.
+
+> Note:
+> This allows tools to use different libraries or versions as needed, 
+> without polluting the main project dependencies.
+
 
 ## Optional: `src/main.ts` (custom startup invocation)
 
