@@ -423,4 +423,29 @@ You can now use it in your tool configs and templates.
 
 ---
 
+## Keeping Derived Projects Up-to-Date (Template Sync Workflow)
+
+This template supports automatic updates for derived repositories using a GitHub Actions workflow. 
+The workflow uses [`AndreasAugustin/actions-template-sync`](https://github.com/AndreasAugustin/actions-template-sync) 
+to regularly or manually sync changes from the template repository into your project.
+
+### Workflow Setup
+
+The synchronization uses the existing workflow file `.github/workflows/template-sync.yml`.  
+This workflow is configured to run **automatically at 00:00 UTC on the first day of every month** (`cron: '0 0 1 * *'`).  
+You can also trigger it manually at any time via the GitHub Actions UI.
+
+### How it works
+
+- The workflow checks for updates in the template repository.
+- If changes are found, it creates a pull request in your derived repository with the updates.
+- You can review and merge the pull request to apply the changes.
+
+### Ignoring files during sync
+
+To prevent certain files or folders from being overwritten, a `.templatesyncignore` exist in the `.github` directory.    
+Use glob patterns to specify files to ignore.
+
+---
+
 And above all, have fun with this template! 😊
