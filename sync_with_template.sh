@@ -25,9 +25,9 @@ UPSTREAM_SHORT=$(git rev-parse --short "$REMOTE_NAME/$UPSTREAM_BRANCH")
 LAST_SYNCED=$(git log --grep="^${SYNC_COMMIT_PREFIX}" -1 --pretty=format:%B | head -1 | grep -o '[0-9a-f]\{40\}' || echo "")
 
 resolve_remaining_conflicts() {
-    echo "--- !!! CONFLICTS REMAIN AFTER RERERE !!! ---"
-    echo "Manually review/edit conflicted files."
-    echo "Then: git add <file> for each resolved file."
+    echo "--- !!! CONFLICTS REMAIN !!! ---"
+    echo "Manually review/edit conflicted files (look for <<<<<<< markers)."
+    echo "Then stage resolved files: git add <file>"
     echo "Press ENTER when ready to commit..."
     read -r
 }
@@ -35,24 +35,23 @@ resolve_remaining_conflicts() {
 if [ -z "$LAST_SYNCED" ]; then
     # First sync: full squash merge
     echo "--- First sync: squash merging full template (up to ${UPSTREAM_SHORT}) ---"
-    git merge --squash --allow-unrelated-histories --rerere-autoupdate "$REMOTE_NAME/$UPSTREAM_BRANCH"
+    git merge --squash --allow-unrelated-histories "$REMOTE_NAME/$UPSTREAM_BRANCH"
 
     # Check for lingering unmerged files
     if git status --porcelain | grep -q '^UU '; then
         resolve_remaining_conflicts
     else
-        echo "Merge completed. All conflicts (if any) auto-resolved by rerere."
+        echo "Merge completed (all conflicts auto-resolved by rerere or none existed)."
     fi
 
-    # Always create a commit for the initial sync, even if no net changes
-    # (use --allow-empty to record the marker for future tracking)
+    # Always create a commit for the initial sync
     git commit --allow-empty -m "${SYNC_COMMIT_PREFIX}${UPSTREAM_HEAD}
 
 Initial full sync from template repository.
 Template commit: ${UPSTREAM_HEAD}
 
 Note: --allow-empty used if template changes resulted in no net differences."
-    echo "Initial sync committed (marker commit created, even if no file changes)."
+    echo "Initial sync committed (marker created)."
 
 else
     # Subsequent: incremental patch
@@ -64,14 +63,16 @@ else
         exit 0
     fi
 
-    echo "$PATCH" | git apply --index -3 --rerere-autoupdate
-    if [ $? -ne 0 ] || git status --porcelain | grep -q '^UU '; then
+    echo "$PATCH" | git apply --index -3
+    APPLY_EXIT=$?
+
+    if [ $APPLY_EXIT -ne 0 ] || git status --porcelain | grep -q '^UU '; then
         resolve_remaining_conflicts
     else
-        echo "Patch applied. All conflicts (if any) auto-resolved by rerere."
+        echo "Patch applied (all conflicts auto-resolved by rerere or none existed)."
     fi
 
-    # Only commit if there are actual changes
+    # Commit if changes or allow-empty for marker (optional)
     if ! git diff --cached --quiet; then
         git commit -m "${SYNC_COMMIT_PREFIX}${UPSTREAM_HEAD}
 
@@ -80,18 +81,16 @@ Changes since last sync (${LAST_SYNCED:0:7}).
 Template commit: ${UPSTREAM_HEAD}"
         echo "Incremental changes committed."
     else
-        # Optional: create empty commit to record that we checked/sync'd
-        # Uncomment if you want a marker even on no-op incremental syncs
+        echo "No net changes from template. Nothing committed."
+        # Uncomment below if you want a marker commit even when up-to-date:
         # git commit --allow-empty -m "${SYNC_COMMIT_PREFIX}${UPSTREAM_HEAD}
         #
-        #No new changes from template (up-to-date).
-        #Template checked at: ${UPSTREAM_HEAD}"
-        # echo "No changes, but marker commit created."
-
-        echo "No net changes from template. Nothing committed."
+        #No new changes (up-to-date check).
+        #Template commit: ${UPSTREAM_HEAD}"
+        # echo "Marker commit created for up-to-date sync."
     fi
 fi
 
 echo "--- ✅ Sync complete! Template at ${UPSTREAM_SHORT} (${UPSTREAM_HEAD}) ---"
-# Optional push: uncomment if desired
+# Optional push:
 # git push origin $(git rev-parse --abbrev-ref HEAD)
