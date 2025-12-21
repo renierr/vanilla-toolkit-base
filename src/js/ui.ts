@@ -158,11 +158,17 @@ export function showMessage(message: string, opts: MessageOptions = { type: 'inf
   closeBtn.innerHTML = '&#10005;';
 
   let autoCloseTimer: number | null = null;
+  let countdownInterval: number | null = null;
+  let countdownEl: HTMLSpanElement | null = null;
 
   const close = () => {
     if (autoCloseTimer !== null) {
       window.clearTimeout(autoCloseTimer);
       autoCloseTimer = null;
+    }
+    if (countdownInterval !== null) {
+      window.clearInterval(countdownInterval);
+      countdownInterval = null;
     }
     item.remove();
   };
@@ -181,6 +187,33 @@ export function showMessage(message: string, opts: MessageOptions = { type: 'inf
     Number.isFinite(options.timeoutMs) &&
     options.timeoutMs > 0
   ) {
+    // Add a small countdown indicator (seconds left)
+    countdownEl = document.createElement('span');
+    countdownEl.className = 'ml-2 text-xs opacity-75';
+    countdownEl.setAttribute('aria-live', 'polite');
+
+    // Append countdown next to the message text
+    text.appendChild(countdownEl);
+
+    const endTime = Date.now() + options.timeoutMs;
+    const updateCountdown = () => {
+      const remainingMs = endTime - Date.now();
+      if (remainingMs <= 0) {
+        countdownEl!.textContent = '(0s)';
+        if (countdownInterval !== null) {
+          window.clearInterval(countdownInterval);
+          countdownInterval = null;
+        }
+        return;
+      }
+      const secs = Math.ceil(remainingMs / 1000);
+      countdownEl!.textContent = `(${secs}s)`;
+    };
+
+    // Initial update and interval
+    updateCountdown();
+    countdownInterval = window.setInterval(updateCountdown, 500);
+
     autoCloseTimer = window.setTimeout(() => {
       close();
     }, options.timeoutMs);
