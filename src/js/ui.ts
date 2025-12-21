@@ -78,7 +78,7 @@ export function showProgress(message: string, options: ShowProgressOptions = { v
   textEl.textContent = (message ?? 'Working…').toString();
 
   // Toggle visibility
-  el.classList.toggle('hidden', !visible);
+  el.classList.toggle('invisible', !visible);
   el.setAttribute('aria-hidden', visible ? 'false' : 'true');
 
   // Wire close button once
