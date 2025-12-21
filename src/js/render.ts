@@ -54,9 +54,15 @@ export function renderTool(tool: Tool | undefined) {
 
 export function renderToolCard(tool: Tool) {
   return `
-    <a href="#${tool.path}" class="card card-compact bg-base-100 rounded-xl shadow hover:shadow-xl transition-all border-l-4 ${
-      tool.draft ? 'border-l-yellow-400' : 'border-l-primary'
-    } border">
+    <a
+      href="#${tool.path}"
+      aria-label="Open tool: ${tool.name}${tool.draft ? ' (draft)' : ''}"
+      class="card card-compact bg-base-100 rounded-xl shadow hover:shadow-xl transition-all border-l-4 ${
+        tool.draft ? 'border-l-yellow-400' : 'border-l-primary'
+      } border focus:outline-none focus:ring-2 focus:ring-offset-2 ring-offset-2 ring-offset-base-100 ${
+        tool.draft ? 'focus:ring-yellow-300' : 'focus:ring-secondary'
+      }"
+    >
       <div class="card-body p-4">
         <div class="flex items-start gap-4">
           <div class="shrink-0 text-muted">
