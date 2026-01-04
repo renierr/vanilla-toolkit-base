@@ -6,6 +6,7 @@ import { renderLayout, renderTool, renderToolCard } from './js/render.ts';
 import { buildTool, parseToolConfig } from './js/tool-config.ts';
 import { setupLucideCreateIcons } from './js/tool-icons.ts';
 import { getFavorites, toggleFavorite } from './js/favorites.ts';
+import router from './js/router.ts';
 
 // apply config values
 document.title = siteContext.config.title;
@@ -216,10 +217,10 @@ function initScrollToTop() {
 }
 
 // === Routing with hash ===
-function router() {
-  const hash = location.hash.slice(1); // without #
-  if (hash) {
-    const tool = tools.find((t) => t.path === hash);
+function router_old() {
+  const path = router.getCurrentPath();
+  if (path) {
+    const tool = tools.find((t) => t.path === path);
     renderTool(tool);
   } else {
     renderOverview();
@@ -267,10 +268,10 @@ async function boot() {
   setupLucideCreateIcons();
 
   // Hash routing only after DOM is ready (prevents early render issues)
-  window.addEventListener('hashchange', router);
+  window.addEventListener('hashchange', router_old);
 
   // Initial route
-  router();
+  router_old();
 }
 
 void boot();
