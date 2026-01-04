@@ -1,10 +1,20 @@
+type RouteListener = (path: string | null, payload?: any) => void;
+
 class Router {
   private currentPath: string | null = null;
   private payload: any = null;
+  private listeners: RouteListener[] = [];
 
   constructor() {
     window.addEventListener('hashchange', this.handleHashChange.bind(this));
     this.handleHashChange();
+  }
+
+  public subscribe(listener: RouteListener) {
+    this.listeners.push(listener);
+    return () => {
+      this.listeners = this.listeners.filter((l) => l !== listener);
+    };
   }
 
   public goTo(path: string, payload: any = null) {
@@ -35,6 +45,7 @@ class Router {
 
   private handleHashChange() {
     this.currentPath = window.location.hash.slice(1) || null;
+    this.listeners.forEach((l) => l(this.currentPath, this.payload));
   }
 }
 

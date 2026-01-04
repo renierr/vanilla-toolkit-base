@@ -27,7 +27,7 @@ async function buildToolsList(): Promise<Tool[]> {
   for (const pathKey in descModules) {
     const match = pathKey.match(/(.+)\/([^/]+)\/config\.json$/);
     if (!match) {
-      console.warn('\\[script\\] unexpected module key, skipping:', pathKey);
+      console.warn('[script] unexpected module key, skipping:', pathKey);
       continue;
     }
     const prefix = match[1]; // dynamic part from glob (e.g. "@tools" or "/src/tools")
@@ -216,9 +216,8 @@ function initScrollToTop() {
   update(); // initial state
 }
 
-// === Routing with hash ===
-function router_old() {
-  const path = router.getCurrentPath();
+// === Routing ===
+function handleRoute(path: string | null) {
   if (path) {
     const tool = tools.find((t) => t.path === path);
     renderTool(tool);
@@ -267,11 +266,11 @@ async function boot() {
   initScrollToTop();
   setupLucideCreateIcons();
 
-  // Hash routing only after DOM is ready (prevents early render issues)
-  window.addEventListener('hashchange', router_old);
+  // Subscribe to router changes
+  router.subscribe(handleRoute);
 
   // Initial route
-  router_old();
+  handleRoute(router.getCurrentPath());
 }
 
 void boot();
