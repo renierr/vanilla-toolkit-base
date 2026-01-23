@@ -28,14 +28,76 @@ class Router {
 
   public goOverview() {
     const currentTool = this.currentPath;
-    this.goTo('');
-    if (currentTool) {
-      setTimeout(() =>
-        document
-          .getElementById(currentTool)
-          ?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      );
+    const scrollAfterNavigation = () => {
+      let called = false;
+      let doScroll = () => {
+        if (called) return;
+        called = true;
+        if (currentTool) {
+          const el = document.getElementById(currentTool);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }
+      };
+
+      const handler = () => {
+        window.removeEventListener('hashchange', handler);
+        window.removeEventListener('popstate', handler);
+        requestAnimationFrame(() => requestAnimationFrame(doScroll));
+      };
+
+      // Add one-time listeners
+      window.addEventListener('hashchange', handler, { once: true });
+      window.addEventListener('popstate', handler, { once: true });
+    };
+
+    // Try to use the new Navigation API to find the earliest entry that points to the overview
+    // (no hash or a lone '#') and navigate back to it using history.go(delta).
+    // @ts-ignore - Navigation API is experimental
+    const nav = (window as any).navigation;
+    if (nav && typeof nav.entries === 'function') {
+      try {
+        const navEntries = nav.entries();
+        if (Array.isArray(navEntries) && navEntries.length > 1) {
+          // Determine the current entry index. If navigation provides it, use that, otherwise assume the last entry is current.
+          const currentIndex = typeof nav.currentEntryIndex === 'number' ? nav.currentEntryIndex : navEntries.length - 1;
+
+          // Find the earliest entry (lowest index) before the current index whose URL has no hash or only a single '#'.
+          let foundIndex = -1;
+          for (let i = 0; i < currentIndex; i++) {
+            const entry = navEntries[i];
+            if (!entry || !entry.url) continue;
+            try {
+              const u = new URL(entry.url);
+              if (!u.hash || u.hash === '#') {
+                foundIndex = i;
+                break; // stop at the first (earliest) matching entry
+              }
+            } catch (e) {
+              // If entry.url isn't a valid absolute URL, skip this entry and continue searching.
+            }
+          }
+
+          if (foundIndex >= 0 && foundIndex < currentIndex) {
+            const delta = foundIndex - currentIndex; // negative number -> go back
+            scrollAfterNavigation();
+            history.go(delta);
+            return;
+          }
+        }
+      } catch (e) {
+        // If anything goes wrong, fall back to the hash-based navigation below.
+        // eslint-disable-next-line no-console
+        console.debug('Navigation API fallback:', e);
+      }
     }
+
+    // Fallback: set hash to overview (empty) and scroll the previously open tool into view if present.
+    if (currentTool) {
+      scrollAfterNavigation();
+    }
+    this.goTo('');
   }
 
   public getCurrentPath(): string | null {
@@ -53,9 +115,6 @@ class Router {
 
   private handleHashChange() {
     this.currentPath = window.location.hash.slice(1) || null;
-    if (this.currentPath) {
-      setTimeout(() => window.scrollTo(0, 0));
-    }
     this.listeners.forEach((l) => l(this.currentPath, this.consumePayload()));
   }
 }
